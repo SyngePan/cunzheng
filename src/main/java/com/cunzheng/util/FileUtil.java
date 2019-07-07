@@ -115,7 +115,7 @@ public class FileUtil {
      * @param fis 输入流
      * @return
      */
-    public static String md5HashCode(InputStream fis) {
+    public static String getFileHash(InputStream fis) {
         try {
             //拿到一个MD5转换器,如果想使用SHA-1或SHA-256，则传入SHA-1,SHA-256
             MessageDigest md = MessageDigest.getInstance("SHA-256");
