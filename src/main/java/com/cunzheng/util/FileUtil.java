@@ -1,4 +1,4 @@
-package com.cunzheng_01.util;
+package com.cunzheng.util;
 
 import lombok.extern.slf4j.Slf4j;
 
