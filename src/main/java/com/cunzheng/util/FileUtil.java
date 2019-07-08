@@ -1,4 +1,4 @@
-package com.cunzheng.util;
+package com.cunzheng_01.util;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +27,7 @@ public class FileUtil {
         InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(fileName);
         if (null == in) {
             log.error(fileName + "文件不存在");
-            throw new IOException("contractAbi/" + fileName + "文件不存在");
+            throw new IOException(fileName + "文件不存在");
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
@@ -115,10 +115,10 @@ public class FileUtil {
      * @param fis 输入流
      * @return
      */
-    public static String getFileHash(InputStream fis) {
+    public static String md5HashCode(InputStream fis) {
         try {
             //拿到一个MD5转换器,如果想使用SHA-1或SHA-256，则传入SHA-1,SHA-256
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance("MD5");
 
             //分多次将一个文件读入，对于大型文件而言，比较推荐这种方式，占用内存比较少。
             byte[] buffer = new byte[1024];

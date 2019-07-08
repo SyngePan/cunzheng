@@ -1,4 +1,4 @@
-package com.cunzheng.contract.service.impl;
+package com.cunzheng.contract;
 
 import cn.hyperchain.sdk.rpc.HyperchainAPI;
 import cn.hyperchain.sdk.rpc.Transaction.Transaction;
@@ -8,16 +8,15 @@ import cn.hyperchain.sdk.rpc.function.FunctionEncode;
 import cn.hyperchain.sdk.rpc.returns.ReceiptReturn;
 import cn.hyperchain.sdk.rpc.returns.SingleValueReturn;
 import com.cunzheng.configuration.exception.ContractException;
-import com.cunzheng.util.BlockUtil;
 import com.cunzheng.contract.response.Code;
 import com.cunzheng.contract.response.ContractDeployRet;
 import com.cunzheng.contract.response.ContractInvokeRet;
-import com.cunzheng.contract.service.CunZhengContractService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,19 +26,17 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class CunZhengContractServiceImpl implements CunZhengContractService{
+public class CunZhengContract {
 
 
     /**
-     *
      * 部署合约通用接口
+     *
      * @param accountJson
      * @param password
      * @return
      * @throws Exception
      */
-
-    @Override
     public ContractDeployRet deployContract(String accountJson, String password) throws Exception {
         //获取区块链API
         HyperchainAPI hyperchainAPI = BlockUtil.getHyperchainAPI();
@@ -55,12 +52,10 @@ public class CunZhengContractServiceImpl implements CunZhengContractService{
         ReceiptReturn receiptReturn = hyperchainAPI.deployContract(transaction);
         if (!receiptReturn.isSuccess()) {
             log.error("合约部署失败");
-
+            return null;
         }
         String contractAddress = receiptReturn.getContractAddress();
-
-        //暂存合约
-        BlockUtil.CONTRACT_ADDRESS = contractAddress;
+        log.info("contractAddress=" + contractAddress);
 
         String txHash = receiptReturn.getTxHash();
         SingleValueReturn txReturn = hyperchainAPI.getTxByHash(txHash);
@@ -82,6 +77,7 @@ public class CunZhengContractServiceImpl implements CunZhengContractService{
 
     /**
      * 调用合约通用接口
+     *
      * @param accountJson
      * @param password
      * @param contractAddress
@@ -91,9 +87,8 @@ public class CunZhengContractServiceImpl implements CunZhengContractService{
      * @return
      * @throws Exception
      */
-    @Override
-    public  ContractInvokeRet callFunction(String accountJson, String password,
-                                                 String contractAddress, String funcName, FuncParamReal[] funcParamReals, boolean simulate) throws Exception {
+    public ContractInvokeRet callFunction(String accountJson, String password,
+                                          String contractAddress, String funcName, FuncParamReal[] funcParamReals, boolean simulate) throws Exception {
 
         HyperchainAPI blockchainAPI = BlockUtil.getHyperchainAPI();
         String address = JSONObject.fromObject(accountJson).getString("address");
@@ -138,6 +133,56 @@ public class CunZhengContractServiceImpl implements CunZhengContractService{
         String timestamp = jsonObject.getString("timestamp");
         String blockNumber = new BigInteger(hexBlockNumber.substring(2, hexBlockNumber.length()), 16).toString();
         return new ContractInvokeRet(returnList, txHash, blockHash, blockNumber, timestamp);
+    }
+
+
+    public ContractInvokeRet saveUser(String userAddress, String userName, int role) throws Exception {
+
+        //获取admin账户
+        String json = BlockUtil.getAdminKey();
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String accountJson = jsonObject.getString("accountJson");
+        String password = jsonObject.getString("password");
+
+        String funcName = "saveUser";
+        //数据库
+        String contractAddress = BlockUtil.CONTRACT_ADDRESS;
+        FuncParamReal[] funcParamReals = new FuncParamReal[3];
+        funcParamReals[0] = new FuncParamReal("address", userAddress);
+        funcParamReals[1] = new FuncParamReal("bytes32", userName);
+        funcParamReals[2] = new FuncParamReal("uint", role);
+
+        return callFunction(accountJson, password, contractAddress,
+                funcName, funcParamReals, false);
+    }
+
+
+    public ContractInvokeRet saveHash(String accountJson, String password,
+                                      String fileHash, long uploadTime) throws Exception {
+
+        String funcName = "saveHash";
+        String contractAddress = BlockUtil.CONTRACT_ADDRESS;
+
+        FuncParamReal[] funcParamReals = new FuncParamReal[2];
+
+        funcParamReals[0] = new FuncParamReal("bytes", fileHash.getBytes(Charset.forName("UTF-8")));
+        funcParamReals[1] = new FuncParamReal("uint", uploadTime);
+
+        return callFunction(accountJson, password, contractAddress,
+                funcName, funcParamReals, false);
+    }
+
+
+    public ContractInvokeRet getFileByHash(String accountJson, String password,
+                                           String fileHash) throws Exception {
+
+        String funcName = "getFileByHash";
+        String contractAddress = BlockUtil.CONTRACT_ADDRESS;
+
+        FuncParamReal[] funcParamReals = new FuncParamReal[1];
+        funcParamReals[0] = new FuncParamReal("bytes", fileHash.getBytes(Charset.forName("UTF-8")));
+        return callFunction(accountJson, password, contractAddress,
+                funcName, funcParamReals, false);
     }
 
 

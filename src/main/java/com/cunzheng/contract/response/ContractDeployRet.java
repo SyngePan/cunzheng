@@ -19,5 +19,4 @@ public class ContractDeployRet {
     private String blockHash;
     private String blockNum;
     private String opTime;
-
 }
