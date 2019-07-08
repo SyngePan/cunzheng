@@ -1,4 +1,4 @@
-package com.cunzheng_01.contract;
+package com.cunzheng.contract;
 
 import cn.hyperchain.sdk.exception.PwdException;
 import cn.hyperchain.sdk.rpc.HyperchainAPI;

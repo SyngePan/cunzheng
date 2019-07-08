@@ -1,4 +1,4 @@
-package com.cunzheng_01.configuration;
+package com.cunzheng.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

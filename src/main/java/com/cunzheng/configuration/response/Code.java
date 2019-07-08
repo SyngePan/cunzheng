@@ -1,4 +1,4 @@
-package com.cunzheng_01.configuration.response;
+package com.cunzheng.configuration.response;
 
 import lombok.Getter;
 

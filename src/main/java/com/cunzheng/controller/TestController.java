@@ -1,4 +1,4 @@
-package com.cunzheng_01.controller;
+package com.cunzheng.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

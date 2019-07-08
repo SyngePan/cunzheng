@@ -1,14 +1,14 @@
-package com.cunzheng_01;
+package com.cunzheng;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-public class Cunzheng01Application {
+public class CunzhengApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Cunzheng01Application.class, args);
+        SpringApplication.run(CunzhengApplication.class, args);
     }
 
 }

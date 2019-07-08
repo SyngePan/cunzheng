@@ -1,4 +1,4 @@
-package com.cunzheng_01.contract;
+package com.cunzheng.contract;
 
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.rpc.HyperchainAPI;

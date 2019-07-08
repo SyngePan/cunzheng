@@ -1,4 +1,4 @@
-package com.cunzheng_01.contract.response;
+package com.cunzheng.contract.response;
 
 import lombok.Getter;
 

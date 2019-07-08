@@ -1,7 +1,7 @@
-package com.cunzheng_01.configuration.exception;
+package com.cunzheng.configuration.exception;
 
 
-import com.cunzheng_01.contract.response.Code;
+import com.cunzheng.contract.response.Code;
 
 /**
  * Created by zhangrui on 2019/6/12.
