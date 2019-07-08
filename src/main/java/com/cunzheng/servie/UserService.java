@@ -1,7 +1,6 @@
 package com.cunzheng.servie;
 
 import com.cunzheng.entity.UserBean;
-import com.cunzheng.entity.UserResult;
 import com.cunzheng.entity.UserRole;
 import com.cunzheng.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
