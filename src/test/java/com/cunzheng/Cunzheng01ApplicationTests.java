@@ -1,4 +1,4 @@
-package com.cunzheng;
+package com.cunzheng_01;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

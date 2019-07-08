@@ -1,4 +1,4 @@
-package com.cunzheng.util;
+package com.cunzheng_01.contract;
 
 import cn.hyperchain.sdk.exception.PwdException;
 import cn.hyperchain.sdk.rpc.HyperchainAPI;
@@ -9,9 +9,12 @@ import cn.hyperchain.sdk.rpc.function.FunctionEncode;
 import cn.hyperchain.sdk.rpc.returns.CompileReturn;
 import cn.hyperchain.sdk.rpc.returns.ReceiptReturn;
 import cn.hyperchain.sdk.rpc.utils.Utils;
+import com.cunzheng_01.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -23,6 +26,7 @@ import java.security.GeneralSecurityException;
 public class BlockUtil {
 
 
+    private final static String CONTRACT_INFO_PATH = "./contract.json";
     private final static String contactName = "CunZheng";
 
     //缓存合约地址
@@ -47,7 +51,6 @@ public class BlockUtil {
         compileReturn.getAbi().forEach(log::info);
         compileReturn.getBin().forEach(log::info);
     }
-
 
 
     public static String newAccountSM2(String pwd) throws GeneralSecurityException, PwdException {
@@ -85,6 +88,43 @@ public class BlockUtil {
     }
 
 
+    public static void writeAdminKey(String json) {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(CONTRACT_INFO_PATH);
+            fw.write(json);
+            fw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static String getAdminKey() {
+
+        FileReader fr1 = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            fr1 = new FileReader(CONTRACT_INFO_PATH);
+            char[] buf = new char[1024];
+            int num = 0;
+            while ((num = fr1.read(buf)) != -1) {
+                stringBuilder.append(new String(buf, 0, num));
+            }
+        } catch (Exception e) {
+            try {
+                fr1.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return stringBuilder.toString();
+    }
 
 
     //----------------测试方法-------------//
@@ -93,7 +133,6 @@ public class BlockUtil {
     private final static String contracAddress = "0x8e80d975824cc29e1b398fae24419daeaedaa45c";
 
     private final static String accountJson = "{\"address\":\"3617EE6FCD75889BACBCE1C07493CE4C8F57697D\",\"publicKey\":\"04CA6EC31094FF58B13B08F8A32579F76F3C869FC2926DA5B43D7DB1657580C359BE2B2939CDAF4638682F28E14BD076BFD47A70B86D34094250644CFFFC53B439\",\"privateKey\":\"7EF600FEA7B55ABBC91ED7227A2884E77D9035D20C2BD4F0B46340302A519F84C6F431EA0E0E22AC\",\"privateKeyEncrypted\":true,\"version\":\"3.0\",\"algo\":\"0x12\"}";
-
 
 
     //todo 该处用于测试 部署方法另写
@@ -156,8 +195,6 @@ public class BlockUtil {
 
         System.out.println(JSONObject.fromObject(receiptReturn).toString(4));
     }
-
-
 
 
 }

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>cunzheng</artifactId>
+    <artifactId>cunzheng_01</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>cunzheng</name>
     <description>Demo project for Spring Boot</description>
@@ -50,6 +50,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.21</version>
         </dependency>
 
         <dependency>

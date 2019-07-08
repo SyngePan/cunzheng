@@ -1,4 +1,4 @@
-package com.cunzheng.configuration;
+package com.cunzheng_01.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created by zhangrui on 2019/7/5.
- * com.cunzheng.configuration
+ * com.cunzheng_01.configuration
  */
 @Configuration
 @EnableSwagger2
@@ -24,7 +24,7 @@ public class Swagger2 {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cunzheng.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.cunzheng_01.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

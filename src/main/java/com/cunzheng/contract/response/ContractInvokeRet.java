@@ -1,4 +1,4 @@
-package com.cunzheng.contract.response;
+package com.cunzheng_01.contract.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

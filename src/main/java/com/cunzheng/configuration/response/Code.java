@@ -1,4 +1,4 @@
-package com.cunzheng_01.contract.response;
+package com.cunzheng_01.configuration.response;
 
 import lombok.Getter;
 
@@ -7,7 +7,7 @@ import lombok.Getter;
  * com.cunzheng.configuration.response
  */
 @Getter
-public enum Code {
+public enum  Code {
     //通用部分
     UNDEFINED(-1, "未定义"),
     SUCCESS(0, "成功"),
