@@ -128,7 +128,7 @@ public class CunZhengController {
 
     //合同状态查询
     @PostMapping("/getContract")
-    @ApiOperation(value = "文件哈希验证", notes = "文件哈希验证")
+    @ApiOperation(value = "查询合同", notes = "查询合同")
     public BaseResult getContract(
             @ApiParam("私钥文件") @RequestParam String accountJson,
             @ApiParam("密码") @RequestParam String password,
@@ -139,12 +139,14 @@ public class CunZhengController {
 
         ContractBean contractBean = contractRepository.findByContractId(contractId);
 
-        if (contractBean != null && contractBean.getFileHash() != null)
+        if (contractBean != null && contractBean.getFileHash() != null) {
+            ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
+                    contractBean.getFileHash());
+            baseResult.returnWithValue(Code.SUCCESS, ret);
+        } else {
+            baseResult.returnWithValue(Code.CONTRACT_NOT_EXIST, null);
+        }
 
-
-        ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
-                contractBean.getFileHash());
-        baseResult.returnWithValue(Code.SUCCESS, ret);
         return baseResult;
     }
 
