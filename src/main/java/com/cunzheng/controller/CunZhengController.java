@@ -2,15 +2,13 @@ package com.cunzheng.controller;
 
 import com.cunzheng.configuration.response.BaseResult;
 import com.cunzheng.configuration.response.Code;
-import com.cunzheng.contract.BlockUtil;
 import com.cunzheng.contract.CunZhengContract;
 import com.cunzheng.contract.response.ContractInvokeRet;
-import com.cunzheng_01.util.FileUtil;
+import com.cunzheng.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by zhangrui on 2019/7/7.
@@ -34,29 +30,7 @@ public class CunZhengController {
     @Autowired
     private CunZhengContract cunZhengContract;
 
-    @PostMapping("/saveUser")
-    @ApiOperation(value = "文件存证", notes = "文件存证")
-    public BaseResult saveUser(
-            @RequestParam String userName,
-            @RequestParam String password,
-            @RequestParam int role
-    ) throws Exception {
 
-        BaseResult baseResult = new BaseResult();
-
-        String accountJson = BlockUtil.newAccountSM2(password);
-
-        ContractInvokeRet ret = cunZhengContract.saveUser(JSONObject.fromObject(accountJson).getString("address"),
-                userName, role);
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("returnRet", ret);
-        map.put("accountJson", accountJson);
-
-        baseResult.returnWithValue(Code.SUCCESS, map);
-        return baseResult;
-    }
 
 
     @PostMapping("/saveEvidence")
