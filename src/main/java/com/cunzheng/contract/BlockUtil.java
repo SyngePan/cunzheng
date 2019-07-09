@@ -9,7 +9,7 @@ import cn.hyperchain.sdk.rpc.function.FunctionEncode;
 import cn.hyperchain.sdk.rpc.returns.CompileReturn;
 import cn.hyperchain.sdk.rpc.returns.ReceiptReturn;
 import cn.hyperchain.sdk.rpc.utils.Utils;
-import com.cunzheng_01.util.FileUtil;
+import com.cunzheng.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 

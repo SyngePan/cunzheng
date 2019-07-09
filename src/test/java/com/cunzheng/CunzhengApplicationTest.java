@@ -1,6 +1,7 @@
 package com.cunzheng;
 
 import com.cunzheng.entity.UserBean;
+import com.cunzheng.entity.UserRole;
 import com.cunzheng.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,15 +22,15 @@ public class CunzhengApplicationTest {
 	public void contextLoads() {
 
 
-		userRepository.save(new UserBean("aaa",1,null,0,null));
-		userRepository.save(new UserBean("bbb",2,null,0,null));
-		userRepository.save(new UserBean("ccc",3,null,0,null));
-		userRepository.save(new UserBean("ddd",4,null,0,null));
-		userRepository.save(new UserBean("eee",5,null,0,null));
+		userRepository.save(new UserBean("aaa", "aaa", UserRole.OWNER,null));
+		userRepository.save(new UserBean("bbb","bbb",UserRole.OWNER,null));
+		userRepository.save(new UserBean("ccc","ccc",UserRole.OWNER,null));
+		userRepository.save(new UserBean("ddd","ddd",UserRole.OWNER,null));
+		userRepository.save(new UserBean("eee","eee",UserRole.OWNER,null));
 
 		Assert.assertEquals(5,userRepository.findAll().size());
 
-		Assert.assertEquals(4,userRepository.findByUserName("eee").getUserId());
+		//Assert.assertEquals(4,userRepository.findByUserName("eee").getUserId());
 
 		userRepository.delete(userRepository.findByUserName("aaa"));
 		Assert.assertEquals(4,userRepository.findAll().size());
