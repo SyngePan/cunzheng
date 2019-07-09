@@ -1,6 +1,5 @@
 package com.cunzheng.entity;
 
-import com.cunzheng.configuration.Status;
 import lombok.*;
 
 import javax.persistence.*;
