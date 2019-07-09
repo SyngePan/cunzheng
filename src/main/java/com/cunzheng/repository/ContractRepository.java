@@ -10,6 +10,6 @@ public interface ContractRepository extends JpaRepository<ContractBean,Long> {
 
     ContractBean findByContractId(int contractId);
 
-    ContractBean findByLandlordSignature(int landlordSignature);
+    List<ContractBean> findByStatus(String status);
 
 }
