@@ -60,6 +60,29 @@ public class CunZhengController {
         return baseResult;
     }
 
+    @PostMapping("/saveEvidence2")
+    @ApiOperation(value = "文件存证", notes = "文件存证")
+    public BaseResult saveEvidence(
+            @ApiParam("用户名") @RequestParam String username,
+            @ApiParam("密码") @RequestParam String password,
+            @ApiParam("合同文本") @RequestParam MultipartFile multipartFile,
+            @ApiParam("合同编号") @RequestParam long contractId
+    ) throws Exception {
+
+        BaseResult baseResult = new BaseResult();
+        System.out.println(multipartFile.getOriginalFilename());
+
+        //md5计算哈希
+        String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
+        System.out.println("fileHash:" + hash);
+
+
+        ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
+                hash, System.currentTimeMillis(),0,contractId);
+        baseResult.returnWithValue(Code.SUCCESS, ret);
+        return baseResult;
+    }
+
 
     @PostMapping("/getHash")
     @ApiOperation(value = "原件验证", notes = "文件存证")
