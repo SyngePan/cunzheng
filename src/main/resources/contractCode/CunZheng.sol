@@ -1,40 +1,38 @@
-pragma solidity ^ 0.4.15;
+pragma solidity ^0.4.15;
 
 contract CunZheng {
-    // contract body...
-    bytes32 aaa;
 
-    //
     struct userData {
-    address userAddress;
-    bytes32 userName;
-    uint userRole;
+        address userAddress;
+        bytes32 userName;
+        uint userRole;
     }
 
     // 文件哈希存储结构
-
     struct File {
-    // 文件ID
-    uint fileId;
-    //文件哈希
-    bytes fileHash;
-    //交易哈希
-    bytes txHash;
-    // 上传者地址
-    address userAddress;
-    // 上传时间
-    uint uploadTime;
+        // 文件ID
+        uint fileId;
+        //文件哈希
+        bytes fileHash;
+        //交易哈希
+        bytes txHash;
+        // 上传者地址
+        address userAddress;
+        // 上传时间
+        uint uploadTime;
+        //合同状态
+        uint fileStatus;
     }
 
 
     //
     mapping(address => uint) address2IdMap;
     //文件哈希
-    mapping(bytes=>uint)fileHash2IdMap;
+    mapping(bytes => uint) fileHash2IdMap;
     //交易哈希
-    mapping(bytes=>uint) txHash2IdMap;
+    mapping(bytes => uint) txHash2IdMap;
     //
-    mapping(uint=>File) fileId2Map;
+    mapping(uint => File) fileId2Map;
 
 
 
@@ -48,8 +46,8 @@ contract CunZheng {
     mapping(address => userData) userMap; // map
 
     function saveUser(
-    address _userAddress,
-    bytes32 _userName, uint _userRole) public returns(uint) {
+        address _userAddress,
+        bytes32 _userName, uint _userRole) public returns(uint) {
 
         if (msg.sender != owner) {
             //权限拒绝
@@ -70,56 +68,101 @@ contract CunZheng {
     }
 
     //自增主键
-    uint FileId_id=1;
+    uint FileId_id = 1;
 
-    function saveHash(bytes _fileHash,uint _uploadTime) public returns(uint){
+    function saveHash(bytes _fileHash, uint _uploadTime) public returns(uint) {
         //判断权限 文件哈希判断
-        if(fileHash2IdMap[_fileHash]!=0){
+        if (fileHash2IdMap[_fileHash] != 0) {
             //文件已经存在
             return CODE_FILE_EXISTED;
         }
-        File memory file=fileId2Map[address2IdMap[msg.sender]];
+        File memory file = fileId2Map[address2IdMap[msg.sender]];
 
         TransactionAccessor hasher = TransactionAccessor(0x00000000000000000000000000000000000000fa);
 
         //交易哈希
         file.txHash = byteConcat(hasher.getHash());
-        file.fileHash=_fileHash;
-        file.uploadTime=_uploadTime;
-        file.userAddress=msg.sender;
-        file.fileId=FileId_id;
+        file.fileHash = _fileHash;
+        file.uploadTime = _uploadTime;
+        file.userAddress = msg.sender;
+        file.fileId = FileId_id;
+        file.fileStatus = 1; // 发布
         //自增
         FileId_id++;
 
-        address2IdMap[file.userAddress]=file.fileId;
-        txHash2IdMap[file.txHash]=file.fileId;
-        fileHash2IdMap[file.fileHash]=file.fileId;
-        fileId2Map[file.fileId]=file;
+        address2IdMap[file.userAddress] = file.fileId;
+        txHash2IdMap[file.txHash] = file.fileId;
+        fileHash2IdMap[file.fileHash] = file.fileId;
+        fileId2Map[file.fileId] = file;
         return CODE_SUCCESS;
     }
 
-    function getFileByHash(bytes _fileHash) returns(uint,uint,bytes,bytes,address,uint){
+    function getFileByHash(bytes _fileHash) public returns(uint, uint, bytes, bytes, address, uint) {
         //权限控制
-        if(fileHash2IdMap[_fileHash]==0){
+        if (fileHash2IdMap[_fileHash] == 0) {
             //文件不存在
-            return(CODE_FILE_NOT_EXITED,0,"","",0x0,0);
+            return (CODE_FILE_NOT_EXITED, 0, "", "", 0x0, 0);
         }
         //取出文件
-        File memory file=fileId2Map[fileHash2IdMap[_fileHash]];
-        return (CODE_SUCCESS,file.fileId,file.fileHash,file.txHash,file.userAddress,file.uploadTime);
+        File memory file = fileId2Map[fileHash2IdMap[_fileHash]];
+        return (CODE_SUCCESS, file.fileId, file.fileHash, file.txHash, file.userAddress, file.uploadTime);
 
     }
 
 
+    function updateFile(uint input_fileId, bytes last_fileHash, bytes curr_fileHash, uint curr_uploadTime, uint input_status) public returns(uint, uint, bytes, bytes, address, uint, uint) {
+
+        if (fileHash2IdMap[last_fileHash] == 0) {
+            //文件不存在
+            return (CODE_FILE_NOT_EXITED, 0, "", "", 0x0, 0, 0);
+        }
+
+        //取出文件
+        File memory file = fileId2Map[input_fileId];
+
+        if (file.fileStatus != input_status) {
+            return (CODE_FILE_STATUS_ERROR, file.fileId, file.fileHash, file.txHash, file.userAddress, file.uploadTime, file.fileStatus);
+        }
+
+        //根据最后一次的文件Hash判断文件是否修改
+        // if (file.fileHash != last_fileHash) {
+        if (fileHash2IdMap[last_fileHash] != input_fileId) {
+            return (CODE_FILE_MODIFIED, file.fileId, file.fileHash, file.txHash, file.userAddress, file.uploadTime, file.fileStatus);
+        }
+
+        TransactionAccessor hasher = TransactionAccessor(0x00000000000000000000000000000000000000fa);
+
+        //交易哈希
+        file.txHash = byteConcat(hasher.getHash());
+        file.fileHash = curr_fileHash;
+        file.uploadTime = curr_uploadTime;
+
+        if (file.fileStatus == 1) {
+            file.fileStatus = 2;
+        } else {
+            if (file.fileStatus == 2) {
+                file.fileStatus = 3;
+            }
+        }
 
 
+        //不修改合同的用户地址
+        //address2IdMap[file.userAddress] = file.fileId;
+        txHash2IdMap[file.txHash] = file.fileId;
+        fileHash2IdMap[file.fileHash] = file.fileId;
+        fileId2Map[file.fileId] = file;
+        return (CODE_SUCCESS, file.fileId, file.fileHash, file.txHash, file.userAddress, file.uploadTime, file.fileStatus);
+    }
 
     //返回码
     uint constant CODE_SUCCESS = 0;
     uint constant CODE_USER_EXITED = 1;
     uint constant CODE_PEMISSION_DENY = 2;
-    uint constant CODE_FILE_EXISTED=3;
-    uint constant CODE_FILE_NOT_EXITED=4;
+    uint constant CODE_FILE_EXISTED = 3;
+    uint constant CODE_FILE_NOT_EXITED = 4;
+
+    uint constant CODE_FILE_MODIFIED = 10;
+    uint constant CODE_FILE_STATUS_ERROR = 20;
 
     //bytes32 转bytes
     function byteConcat(bytes32 b1) internal returns(bytes) {
@@ -129,10 +172,7 @@ contract CunZheng {
         }
         return key;
     }
-
 }
-
-
 
 contract TransactionAccessor {
     function getHash() returns(bytes32);
