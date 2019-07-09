@@ -1,6 +1,5 @@
 package com.cunzheng.entity;
 
-import com.cunzheng.configuration.Status;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,10 +24,10 @@ public class ContractBean {
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition="blob", nullable=true, length=10000000)
     private byte[] content;
-    private String status;
+    private int status;
 
 
-    public ContractBean(String contractHash, Date uploadTime, String landlordSignature, String tenantSignature, String fileHash, byte[] content, String status) {
+    public ContractBean(String contractHash, Date uploadTime, String landlordSignature, String tenantSignature, String fileHash, byte[] content, int status) {
         this.contractHash = contractHash;
         this.uploadTime = uploadTime;
         this.landlordSignature = landlordSignature;
@@ -38,4 +37,5 @@ public class ContractBean {
         this.status = status;
     }
 }
+
 
