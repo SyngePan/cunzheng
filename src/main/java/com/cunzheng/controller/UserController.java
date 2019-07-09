@@ -29,20 +29,20 @@ public class UserController {
     @PostMapping("/saveUser")
     @ApiOperation(value = "用户注册", notes = "用户注册")
     public String saveUser(
-            @RequestParam String userName,
+            @RequestParam String username,
             @RequestParam String password,
             @RequestParam UserRole userRole
     ) throws Exception {
 
-        boolean userNameExists = userService.hasUserNameCreated(userName);
+        boolean userNameExists = userService.hasUserNameCreated(username);
         if (userNameExists) {
             return "Username already exists";
         }
 
         String accountJson = BlockUtil.newAccountSM2(password);
 
-        cunZhengContract.saveUser(JSONObject.fromObject(accountJson).getString("address"), userName, userRole.getCode());
-        userService.saveUser(userName, password, userRole, accountJson);
+        cunZhengContract.saveUser(JSONObject.fromObject(accountJson).getString("address"), username, userRole.getCode());
+        userService.saveUser(username, password, userRole, accountJson);
 
         return "success";
     }

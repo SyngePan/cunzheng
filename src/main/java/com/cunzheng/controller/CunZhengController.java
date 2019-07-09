@@ -5,6 +5,7 @@ import com.cunzheng.configuration.response.Code;
 import com.cunzheng.contract.CunZhengContract;
 import com.cunzheng.contract.response.ContractInvokeRet;
 import com.cunzheng.entity.ContractBean;
+import com.cunzheng.entity.UserThreadLocal;
 import com.cunzheng.repository.ContractRepository;
 import com.cunzheng.util.FileUtil;
 import io.swagger.annotations.Api;
@@ -104,7 +105,7 @@ public class CunZhengController {
     @PostMapping("/getContract")
     @ApiOperation(value = "查询合同", notes = "查询合同")
     public BaseResult getContract(
-            @ApiParam("私钥文件") @RequestParam String accountJson,
+            @ApiParam("私钥文件") @RequestParam String userName,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("合同编号") @RequestParam int contractId
     ) throws Exception {
@@ -114,7 +115,7 @@ public class CunZhengController {
         ContractBean contractBean = contractRepository.findByContractId(contractId);
 
         if (contractBean != null && contractBean.getFileHash() != null) {
-            ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
+            ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                     contractBean.getFileHash());
             baseResult.returnWithValue(Code.SUCCESS, ret);
         } else {

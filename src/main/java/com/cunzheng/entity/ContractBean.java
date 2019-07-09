@@ -15,7 +15,6 @@ import java.util.Date;
 @Entity
 public class ContractBean {
     @Id
-    @GeneratedValue
     private int contractId;
     private String contractHash;
     private Date uploadTime;
@@ -24,17 +23,19 @@ public class ContractBean {
     private String fileHash;
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(name=" contract_file", columnDefinition="blob", nullable=true)
-    private byte[] contractFile;
+    @Column(columnDefinition="blob", nullable=true, length=10000000)
+    private byte[] content;
     private String status;
 
-    public ContractBean(String contractHash, Date uploadTime, String landlordSignature, String tenantSignature, String fileHash, byte[] contractFile, String status) {
+
+    public ContractBean(String contractHash, Date uploadTime, String landlordSignature, String tenantSignature, String fileHash, byte[] content, String status) {
         this.contractHash = contractHash;
         this.uploadTime = uploadTime;
         this.landlordSignature = landlordSignature;
         this.tenantSignature = tenantSignature;
         this.fileHash = fileHash;
-        this.contractFile = contractFile;
+        this.content = content;
         this.status = status;
     }
 }
+

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>cunzheng_01</artifactId>
+    <artifactId>cunzheng</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>cunzheng</name>
     <description>Demo project for Spring Boot</description>
@@ -33,7 +33,6 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/hyperchainsdk-4.2.5-jar-with-dependencies.jar</systemPath>
         </dependency>
-
         <!-- Swagger2构建RESTful API文档 -->
         <dependency>
             <groupId>io.springfox</groupId>
