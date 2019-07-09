@@ -2,9 +2,7 @@ package com.cunzheng.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -16,11 +14,14 @@ import java.util.Date;
 @Entity
 public class ContractBean {
     @Id
-    @GeneratedValue
     private int contractId;
     private String contractHash;
     private Date uploadTime;
     private String landlordSignature;
     private String tenantSignature;
-    private String fileHash;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition="blob", nullable=true, length=10000000)
+    private byte[] content;
 }
+
