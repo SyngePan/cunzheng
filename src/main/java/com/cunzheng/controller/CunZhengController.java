@@ -41,7 +41,7 @@ public class CunZhengController {
     @PostMapping("/saveEvidence")
     @ApiOperation(value = "文件存证", notes = "文件存证")
     public BaseResult saveEvidence(
-            @ApiParam("私钥文件") @RequestParam String userName,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件") @RequestParam MultipartFile multipartFile
     ) throws Exception {
@@ -87,7 +87,7 @@ public class CunZhengController {
     @PostMapping("/getHash")
     @ApiOperation(value = "原件验证", notes = "文件存证")
     public BaseResult getHash(
-            @ApiParam("私钥文件") @RequestParam String userName,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件") @RequestParam MultipartFile multipartFile
     ) throws Exception {
@@ -111,7 +111,7 @@ public class CunZhengController {
     @PostMapping("/getFileHash")
     @ApiOperation(value = "文件哈希验证", notes = "文件哈希验证")
     public BaseResult getFileHash(
-            @ApiParam("私钥文件") @RequestParam String userName,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件哈希") @RequestParam String fileHash
     ) throws Exception {
@@ -128,7 +128,7 @@ public class CunZhengController {
     @PostMapping("/getContract")
     @ApiOperation(value = "查询合同", notes = "查询合同")
     public BaseResult getContract(
-            @ApiParam("私钥文件") @RequestParam String userName,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("合同编号") @RequestParam int contractId
     ) throws Exception {

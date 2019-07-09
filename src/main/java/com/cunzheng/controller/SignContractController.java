@@ -30,7 +30,7 @@ public class SignContractController {
 
 	@PostMapping("/landlordSign")
 	@ApiOperation(value = "房东签约", notes = "房东签约")
-	public BaseResult landlordSign(@ApiParam("用户") @RequestParam String userName,
+	public BaseResult landlordSign(@ApiParam("用户") @RequestParam String username,
 			@ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
 			@ApiParam("之前合同文件Hash(隐藏域)") @RequestParam String contractHash,
 			@ApiParam("文件") @RequestParam MultipartFile multipartFile) throws Exception {
@@ -46,7 +46,9 @@ public class SignContractController {
 
 		long currentTimeMillis = System.currentTimeMillis();
 		System.out.println("currentTimeMillis:" + currentTimeMillis);
-		ContractInvokeRet ret = cunZhengContract.updateFile(UserThreadLocal.get().getAccountJson(), password,
+		String accountJson = UserThreadLocal.get().getAccountJson();
+		log.info(accountJson);
+		ContractInvokeRet ret = cunZhengContract.updateFile(accountJson, password,
 				contractId, contractHash, hash, currentTimeMillis, 1);
 		baseResult.returnWithValue(Code.SUCCESS, ret);
 		return baseResult;
@@ -54,7 +56,7 @@ public class SignContractController {
 
 	@PostMapping("/tenantSign")
 	@ApiOperation(value = "租客签约", notes = "租客签约")
-	public BaseResult tenantSign(@ApiParam("用户") @RequestParam String userName,
+	public BaseResult tenantSign(@ApiParam("用户") @RequestParam String username,
 			@ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
 			@ApiParam("之前合同文件Hash(隐藏域)") @RequestParam String contractHash,
 			@ApiParam("文件") @RequestParam MultipartFile multipartFile) throws Exception {

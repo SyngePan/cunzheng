@@ -163,10 +163,12 @@ public class CunZhengContract {
         String funcName = "saveHash";
         String contractAddress = BlockUtil.CONTRACT_ADDRESS;
 
-        FuncParamReal[] funcParamReals = new FuncParamReal[2];
+        FuncParamReal[] funcParamReals = new FuncParamReal[4];
 
         funcParamReals[0] = new FuncParamReal("bytes", fileHash.getBytes(Charset.forName("UTF-8")));
         funcParamReals[1] = new FuncParamReal("uint", uploadTime);
+        funcParamReals[2] = new FuncParamReal("uint", 0);
+        funcParamReals[3] = new FuncParamReal("uint", 0);
 
         return callFunction(accountJson, password, contractAddress,
                 funcName, funcParamReals, false);
