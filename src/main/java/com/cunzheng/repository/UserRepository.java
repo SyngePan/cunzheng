@@ -9,6 +9,4 @@ public interface UserRepository extends JpaRepository<UserBean,Long> {
 
     UserBean findByUserName(String userName);
 
-    List<UserBean> findByUserNameLike(String userName);
-
 }

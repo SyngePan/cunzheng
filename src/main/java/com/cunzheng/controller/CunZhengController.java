@@ -4,6 +4,8 @@ import com.cunzheng.configuration.response.BaseResult;
 import com.cunzheng.configuration.response.Code;
 import com.cunzheng.contract.CunZhengContract;
 import com.cunzheng.contract.response.ContractInvokeRet;
+import com.cunzheng.entity.ContractBean;
+import com.cunzheng.repository.ContractRepository;
 import com.cunzheng.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +31,8 @@ public class CunZhengController {
 
     @Autowired
     private CunZhengContract cunZhengContract;
+    @Autowired
+    private ContractRepository contractRepository;
 
 
 
@@ -79,6 +83,46 @@ public class CunZhengController {
 
 
     //文件哈希验证 TODO
+
+    @PostMapping("/getFileHash")
+    @ApiOperation(value = "文件哈希验证", notes = "文件哈希验证")
+    public BaseResult getFileHash(
+            @ApiParam("私钥文件") @RequestParam String accountJson,
+            @ApiParam("密码") @RequestParam String password,
+            @ApiParam("文件哈希") @RequestParam String fileHash
+    ) throws Exception {
+
+        BaseResult baseResult = new BaseResult();
+
+        ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
+                fileHash);
+        baseResult.returnWithValue(Code.SUCCESS, ret);
+        return baseResult;
+    }
+
+    //合同状态查询
+    @PostMapping("/getContract")
+    @ApiOperation(value = "查询合同", notes = "查询合同")
+    public BaseResult getContract(
+            @ApiParam("私钥文件") @RequestParam String accountJson,
+            @ApiParam("密码") @RequestParam String password,
+            @ApiParam("合同编号") @RequestParam int contractId
+    ) throws Exception {
+
+        BaseResult baseResult = new BaseResult();
+
+        ContractBean contractBean = contractRepository.findByContractId(contractId);
+
+        if (contractBean != null && contractBean.getFileHash() != null) {
+            ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
+                    contractBean.getFileHash());
+            baseResult.returnWithValue(Code.SUCCESS, ret);
+        } else {
+            baseResult.returnWithValue(Code.CONTRACT_NOT_EXIST, null);
+        }
+
+        return baseResult;
+    }
 
 
     //交易哈希验证 TODO

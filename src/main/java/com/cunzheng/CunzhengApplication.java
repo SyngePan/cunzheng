@@ -1,14 +1,30 @@
 package com.cunzheng;
 
+import com.cunzheng.entity.ContractBean;
+import com.cunzheng.repository.ContractRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
+import javax.annotation.PostConstruct;
+import java.util.Date;
+
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class CunzhengApplication {
 
+    @Autowired
+    private ContractRepository contractRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(CunzhengApplication.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("init...");
+        //contractRepository.save(contractRepository.save(new ContractBean(1, "d41d8cd98f00b204e9800998ecf8427e", new Date(),
+         //       "fangdong", "fangke", "d41d8cd98f00b204e9800998ecf8427e")));
     }
 
 }

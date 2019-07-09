@@ -13,7 +13,11 @@ public enum Code {
     SUCCESS(0, "成功"),
 
     CONTRACT_ERROR(9001,"合约调用错误"),
-    SYSTEM_ERROR(9999, "系统异常，请稍后重试");
+    SYSTEM_ERROR(9999, "系统异常，请稍后重试"),
+
+    SYSTEM_ERROR1(99912, "系统异常，请稍后重试"),
+    CONTRACT_NOT_EXIST(300,"合同不存在");
+
 
     private int code;
     private String message;

@@ -91,10 +91,7 @@ public class BlockUtilTest {
     }
 
 
-
-
-
-    public static Map<String, Object> decodePayload( String payload, String abi) throws  IOException {
+    public static Map<String, Object> decodePayload(String payload, String abi) throws IOException {
 
         //参数名与方法参数映射关系
         Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -166,9 +163,6 @@ public class BlockUtilTest {
         fullName += ")";
         return "0x" + sha3(fullName).substring(0, 8);
     }
-
-
-
 
 
     public static String sha3(String str) {
