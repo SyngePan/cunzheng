@@ -172,7 +172,28 @@ public class CunZhengContract {
                 funcName, funcParamReals, false);
     }
 
+	public ContractInvokeRet updateFile(String accountJson, String password, int contractId, String lastFileHash,
+			String fileHash, long uploadTime, long expectedStatus) throws Exception {
 
+		String funcName = "updateFile";
+		String contractAddress = BlockUtil.CONTRACT_ADDRESS;
+
+		FuncParamReal[] funcParamReals = new FuncParamReal[5];
+
+		log.info("contractId:"+contractId);
+		log.info("lastFileHash："+lastFileHash);
+		log.info("fileHash："+fileHash);
+		log.info("uploadTime："+uploadTime);
+		log.info("expectedStatus："+expectedStatus);
+		funcParamReals[0] = new FuncParamReal("uint", contractId);
+		funcParamReals[1] = new FuncParamReal("bytes", lastFileHash.getBytes(Charset.forName("UTF-8")));
+		funcParamReals[2] = new FuncParamReal("bytes", fileHash.getBytes(Charset.forName("UTF-8")));
+		funcParamReals[3] = new FuncParamReal("uint", uploadTime);
+		funcParamReals[4] = new FuncParamReal("uint", expectedStatus);
+
+		return callFunction(accountJson, password, contractAddress, funcName, funcParamReals, false);
+	}
+	
     public ContractInvokeRet getFileByHash(String accountJson, String password,
                                            String fileHash) throws Exception {
 
