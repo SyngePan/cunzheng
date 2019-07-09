@@ -1,6 +1,5 @@
 package com.cunzheng;
 
-import com.cunzheng.configuration.Status;
 import com.cunzheng.entity.ContractBean;
 import com.cunzheng.entity.UserBean;
 import com.cunzheng.repository.ContractRepository;
@@ -52,7 +51,7 @@ public class CunzhengApplicationTest {
 		File file = new File("/Users/chenghao/Desktop/batulu/blockchain/cunzheng/src/test/房屋租赁合同.pdf");
 
 		contractRepository.save(new ContractBean("",new Date(),"fangdong","fangke",
-				"", Files.readAllBytes(file.toPath()), Status.NEW.name()));
+				"", Files.readAllBytes(file.toPath()), 1));
 
 		ContractBean cb = contractRepository.findByContractId(1);
 		//contractRepository.save(new ContractBean(2,"",new Date(),"fangdong1","fangke1",""));
@@ -156,3 +155,4 @@ public class CunzhengApplicationTest {
 
 
 }
+
