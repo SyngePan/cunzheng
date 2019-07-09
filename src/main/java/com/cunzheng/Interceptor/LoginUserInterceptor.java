@@ -4,12 +4,10 @@ import com.cunzheng.entity.UserBean;
 import com.cunzheng.entity.UserThreadLocal;
 import com.cunzheng.servie.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,12 +22,17 @@ public class LoginUserInterceptor extends HandlerInterceptorAdapter {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         UserBean userBean = userService.verifyUserNameAndPassWord(userName, password);
-        if(userBean!=null){
+        if (userBean != null) {
             UserThreadLocal.set(userBean);
             return true;
-        }else {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN,"用户名或者密码错误");
+        } else {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "invalid username or password.");
             return false;
         }
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+        UserThreadLocal.set(null);
     }
 }
