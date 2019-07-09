@@ -1,6 +1,7 @@
 package com.cunzheng.Interceptor;
 
 import com.cunzheng.entity.UserBean;
+import com.cunzheng.entity.UserThreadLocal;
 import com.cunzheng.servie.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,18 +15,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class LoginUserInterceptor extends HandlerInterceptorAdapter {
-    private ThreadLocal<UserBean> userBeanThreadLocal = new ThreadLocal<>();
 
     @Autowired
     UserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String userName = request.getParameter("userName");
+        String userName = request.getParameter("username");
         String password = request.getParameter("password");
         UserBean userBean = userService.verifyUserNameAndPassWord(userName, password);
         if(userBean!=null){
-            userBeanThreadLocal.set(userBean);
+            UserThreadLocal.set(userBean);
             return true;
         }else {
             response.sendError(HttpServletResponse.SC_FORBIDDEN,"用户名或者密码错误");
