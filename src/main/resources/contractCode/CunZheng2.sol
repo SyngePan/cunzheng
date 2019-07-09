@@ -77,10 +77,11 @@ contract CunZheng {
             //文件已经存在
             return (CODE_FILE_EXISTED, fileHash2IdMap[_fileHash]);
         }
-        File file= fileId2Map[_fileId];
-        if (file.fileHash.length == 0) {
+        if (_fileId == 0) {
             FileId_id++;
         }
+
+        File file= fileId2Map[FileId_id];
 
         TransactionAccessor hasher = TransactionAccessor(0x00000000000000000000000000000000000000fa);
 
