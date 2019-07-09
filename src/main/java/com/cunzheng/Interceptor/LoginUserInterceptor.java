@@ -26,7 +26,7 @@ public class LoginUserInterceptor extends HandlerInterceptorAdapter {
             UserThreadLocal.set(userBean);
             return true;
         } else {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "用户名或者密码错误");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "invalid username or password.");
             return false;
         }
     }
