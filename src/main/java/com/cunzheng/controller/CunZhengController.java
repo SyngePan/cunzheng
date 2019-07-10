@@ -232,7 +232,7 @@ public class CunZhengController {
                 currentTimeMillis, expectedStatus);
 
         handlerReturnStatus(baseResult, ret);
-        updateContractIntoDatabase(UserRole.OWNER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
+        updateContractIntoDatabase(UserRole.LANDLORD, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
     }
 
@@ -259,7 +259,7 @@ public class CunZhengController {
                 contractId, contractHash, hash, currentTimeMillis, expectedStatus);
 
         handlerReturnStatus(baseResult, ret);
-        updateContractIntoDatabase(UserRole.RENTER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
+        updateContractIntoDatabase(UserRole.TENANT, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
     }
 
@@ -273,7 +273,7 @@ public class CunZhengController {
             contractBean.setContractId(contractId);
             contractBean.setContractHash(hash);
             contractBean.setUploadTime(new Date());
-            if ((UserRole.OWNER).equals(role)) {
+            if ((UserRole.LANDLORD).equals(role)) {
                 contractBean.setLandlordSignature(address);
             } else {
                 contractBean.setTenantSignature(address);
