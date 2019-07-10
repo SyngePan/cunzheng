@@ -101,8 +101,7 @@ public class SignContractController {
 		if (baseResult.getCode() == 0) {
 			String address = JSONObject.fromObject(UserThreadLocal.get().getAccountJson()).getString("address");
 
-			contractRepository.findByContractId(contractId);
-			ContractBean contractBean = new ContractBean();
+			ContractBean contractBean = contractRepository.findByContractId(contractId);
 			contractBean.setContractId(contractId);
 			contractBean.setContractHash(hash);
 			contractBean.setUploadTime(new Date());
