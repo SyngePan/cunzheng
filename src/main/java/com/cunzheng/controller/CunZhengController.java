@@ -35,13 +35,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
 /**
- * Created by zhangrui on 2019/7/7.
- * com.cunzheng.controller
+ * 电子存证合同管理模块，包括合同发起、合同签署、
+ * 合同查询、合同验证、合同下载
  */
 @RestController
 @RequestMapping("v1/evidence")
 @Slf4j
-@Api(value = "电子存证", description = "电子存证模块功能")
+@Api(value = "电子存证", description = "电子存证合同管理模块功能")
 public class CunZhengController {
 
     @Autowired
@@ -50,8 +50,8 @@ public class CunZhengController {
     private ContractRepository contractRepository;
 
 
-    @PostMapping("/saveEvidence")
-    @ApiOperation(value = "文件存证", notes = "文件存证")
+    @PostMapping("/launchContract")
+    @ApiOperation(value = "合同发起", notes = "合同发起")
     public BaseResult<ContractInvokeRet> saveEvidence(
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
@@ -59,11 +59,11 @@ public class CunZhengController {
     ) throws Exception {
 
         BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
-        log.error(multipartFile.getOriginalFilename());
+        log.info(multipartFile.getOriginalFilename());
 
         //md5计算哈希
         String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-        log.error("fileHash:" + hash);
+        log.info("fileHash:" + hash);
 
 
         long currentTimeMillis = System.currentTimeMillis();
@@ -87,33 +87,6 @@ public class CunZhengController {
         return baseResult;
     }
 
-    @PostMapping("/launchContract")
-    @ApiOperation(value = "合同发起", notes = "合同发起")
-    public BaseResult launchContract(
-            @ApiParam("用户名") @RequestParam String username,
-            @ApiParam("密码") @RequestParam String password,
-            @ApiParam("合同文本") @RequestParam MultipartFile multipartFile
-    ) throws Exception {
-
-        BaseResult baseResult = new BaseResult();
-        log.info(multipartFile.getOriginalFilename());
-
-        //计算哈希
-        String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-        log.info("fileHash:" + hash);
-
-        ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
-                hash, System.currentTimeMillis(), 1, 0);
-        List<Object> list = ret.getReturnList();
-        if (list != null && list.size() > 1) {
-            ContractBean cb = new ContractBean(hash, new Date(), "fangdong", "fangke",
-                    hash, multipartFile.getBytes(), 0);
-            cb.setContractId((new Integer((String) list.get(1))));
-            contractRepository.save(cb);
-        }
-        baseResult.returnWithValue(Code.SUCCESS, ret);
-        return baseResult;
-    }
 
     @PostMapping("/getHash")
     @ApiOperation(value = "原件验证", notes = "文件存证")
@@ -136,8 +109,6 @@ public class CunZhengController {
         return baseResult;
     }
 
-
-    //文件哈希验证 TODO
 
     @PostMapping("/getFileHash")
     @ApiOperation(value = "文件哈希验证", notes = "文件哈希验证")
@@ -232,7 +203,7 @@ public class CunZhengController {
                 currentTimeMillis, expectedStatus);
 
         handlerReturnStatus(baseResult, ret);
-        updateContractIntoDatabase(UserRole.OWNER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
+        updateContractIntoDatabase(UserRole.LANDLORD, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
     }
 
@@ -259,7 +230,7 @@ public class CunZhengController {
                 contractId, contractHash, hash, currentTimeMillis, expectedStatus);
 
         handlerReturnStatus(baseResult, ret);
-        updateContractIntoDatabase(UserRole.RENTER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
+        updateContractIntoDatabase(UserRole.TENANT, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
     }
 
@@ -273,7 +244,7 @@ public class CunZhengController {
             contractBean.setContractId(contractId);
             contractBean.setContractHash(hash);
             contractBean.setUploadTime(new Date());
-            if ((UserRole.OWNER).equals(role)) {
+            if ((UserRole.LANDLORD).equals(role)) {
                 contractBean.setLandlordSignature(address);
             } else {
                 contractBean.setTenantSignature(address);
@@ -285,7 +256,7 @@ public class CunZhengController {
         }
     }
 
-    public void handlerReturnStatus(BaseResult<ContractInvokeRet> baseResult, ContractInvokeRet ret) {
+    private void handlerReturnStatus(BaseResult<ContractInvokeRet> baseResult, ContractInvokeRet ret) {
         int status = -1;
         if (ret.getReturnList() != null) {
             status = Integer.parseInt((String) ret.getReturnList().get(0));
@@ -297,6 +268,9 @@ public class CunZhengController {
                 break;
             case 2:
                 baseResult.returnWithValue(Code.CODE_PERMISSION_DENY, ret);
+                break;
+            case 3:
+                baseResult.returnWithValue(Code.CONTRACT_ALREADY_EXISTED, ret);
                 break;
             case 4:
                 baseResult.returnWithValue(Code.CODE_FILE_NOT_EXITED, ret);

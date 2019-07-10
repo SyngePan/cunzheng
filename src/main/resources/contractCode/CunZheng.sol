@@ -72,6 +72,19 @@ contract CunZheng {
     uint FileId_id = 0;
 
     function saveHash(bytes _fileHash, uint _uploadTime, uint _status, uint _fileId) public returns(uint, uint) {
+        userData memory user = userMap[msg.sender];
+
+        //权限验证，只有注册用户才能调用
+        if (user.userName == "") {
+            return (CODE_PEMISSION_DENY, 0);
+        }
+
+        //权限验证，只有房东上传原件
+        if (user.userRole != 1) {
+            return (CODE_PEMISSION_DENY, 0);
+        }
+
+
         //判断权限 文件哈希判断
         if (fileHash2IdMap[_fileHash] != 0) {
             //文件已经存在
@@ -79,18 +92,11 @@ contract CunZheng {
         }
 
 
-        userData memory user = userMap[msg.sender];
-
-        //权限验证，只有房东上传原件
-        if (user.userRole != 1) {
-            return (CODE_PEMISSION_DENY, 0);
-        }
-
         if (_fileId == 0) {
             FileId_id++;
         }
 
-        File file = fileId2Map[FileId_id];
+        File storage file = fileId2Map[FileId_id];
         TransactionAccessor hasher = TransactionAccessor(0x00000000000000000000000000000000000000fa);
 
         //交易哈希
@@ -109,6 +115,13 @@ contract CunZheng {
     }
 
     function getFileByHash(bytes _fileHash) returns(uint, uint, bytes, bytes, address, uint) {
+        userData memory user = userMap[msg.sender];
+
+        //权限验证，只有注册用户才能调用
+        if (user.userName == "") {
+            return (CODE_PEMISSION_DENY, 0, "", "", 0x0, 0);
+        }
+
         //权限控制
         if (fileHash2IdMap[_fileHash] == 0) {
             //文件不存在
@@ -133,18 +146,18 @@ contract CunZheng {
     }
 
     function updateFile(uint input_fileId, bytes last_fileHash, bytes curr_fileHash, uint curr_uploadTime, uint input_status) public returns(uint, uint) {
+        userData memory user = userMap[msg.sender];
+
+        //权限验证，只有注册用户才能调用
+        if (user.userName == "") {
+            return (CODE_PEMISSION_DENY, 0);
+        }
 
         if (fileHash2IdMap[last_fileHash] == 0) {
             //文件不存在
             return (CODE_FILE_NOT_EXITED, 0);
         }
-        File file = fileId2Map[fileHash2IdMap[last_fileHash]];
-
-        if (file.status != input_status) {
-            return (CODE_FILE_STATUS_ERROR, file.status);
-        }
-
-        userData memory user = userMap[msg.sender];
+        File storage file = fileId2Map[input_fileId];
 
         //权限验证
         //房东签署合同原件
@@ -159,6 +172,10 @@ contract CunZheng {
                     return (CODE_PEMISSION_DENY, file.status);
                 }
             }
+        }
+
+        if (file.status != input_status) {
+            return (CODE_FILE_STATUS_ERROR, file.status);
         }
 
         //根据最后一次的文件Hash判断文件是否修改
