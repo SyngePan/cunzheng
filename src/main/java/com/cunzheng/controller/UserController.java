@@ -6,6 +6,7 @@ import com.cunzheng.contract.CunZhengContract;
 import com.cunzheng.entity.UserRole;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,9 @@ public class UserController {
     @PostMapping("/saveUser")
     @ApiOperation(value = "用户注册", notes = "用户注册")
     public String saveUser(
-            @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam UserRole userRole
+            @ApiParam("用户名")  @RequestParam String username,
+            @ApiParam("密码") @RequestParam String password,
+            @ApiParam("用户角色") @RequestParam UserRole userRole
     ) throws Exception {
 
         boolean userNameExists = userService.hasUserNameCreated(username);

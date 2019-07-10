@@ -1,7 +1,7 @@
 package com.cunzheng.entity;
 
 public enum UserRole {
-    OWNER(1), RENTER(2);
+    LANDLORD(1), TENANT(2);
 
     private int code;
 
