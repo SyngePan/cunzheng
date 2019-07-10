@@ -78,6 +78,14 @@ contract CunZheng {
             return (CODE_FILE_EXISTED, fileHash2IdMap[_fileHash]);
         }
 
+
+        userData memory user = userMap[msg.sender];
+
+        //权限验证，只有房东上传原件
+        if (user.userRole != 1) {
+            return (CODE_PEMISSION_DENY, 0);
+        }
+
         if (_fileId == 0) {
             FileId_id++;
         }
@@ -92,7 +100,7 @@ contract CunZheng {
         file.uploadTime.push(_uploadTime);
         file.userAddress.push(msg.sender);
         file.fileId = FileId_id;
-        file.status = 1;
+        file.status = _status;
 
         txHash2IdMap[txHash] = file.fileId;
         fileHash2IdMap[_fileHash] = file.fileId;
@@ -136,6 +144,23 @@ contract CunZheng {
             return (CODE_FILE_STATUS_ERROR, file.status);
         }
 
+        userData memory user = userMap[msg.sender];
+
+        //权限验证
+        //房东签署合同原件
+        if (file.status == 1) {
+            if (user.userRole != 1) {
+                return (CODE_PEMISSION_DENY, file.status);
+            }
+        } else {
+            //租客签署 房东签署之后的合同
+            if (file.status == 2) {
+                if (user.userRole != 2) {
+                    return (CODE_PEMISSION_DENY, file.status);
+                }
+            }
+        }
+
         //根据最后一次的文件Hash判断文件是否修改
         uint index = file.fileHash.length;
         uint i;
@@ -150,6 +175,9 @@ contract CunZheng {
         if (!flag) {
             return (CODE_FILE_MODIFIED, file.status);
         }
+
+
+
 
         TransactionAccessor hasher = TransactionAccessor(0x00000000000000000000000000000000000000fa);
 

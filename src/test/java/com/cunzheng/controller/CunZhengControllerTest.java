@@ -73,8 +73,8 @@ public class CunZhengControllerTest {
 
         File file = new File("/Users/chenghao/Desktop/batulu/blockchain/cunzheng/src/test/房屋租赁合同.pdf");
 
-        ContractBean cb = contractRepository.save(new ContractBean("",new Date(),"fangdong","fangke",
-                "", Files.readAllBytes(file.toPath()),2));
+        ContractBean cb = contractRepository.save(new ContractBean("", new Date(), "fangdong", "fangke",
+                "", Files.readAllBytes(file.toPath()), 0));
 
         ContractBean queryCb = contractRepository.findByContractId(cb.getContractId());
 
