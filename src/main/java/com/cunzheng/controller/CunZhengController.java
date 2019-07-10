@@ -108,7 +108,7 @@ public class CunZhengController {
 
         ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                 hash);
-        baseResult.returnWithValue(Code.SUCCESS, ret);
+        handlerReturnStatus(baseResult, ret);
         return baseResult;
     }
 
@@ -125,7 +125,7 @@ public class CunZhengController {
 
         ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                 fileHash);
-        baseResult.returnWithValue(Code.SUCCESS, ret);
+        handlerReturnStatus(baseResult, ret);
         return baseResult;
     }
 
