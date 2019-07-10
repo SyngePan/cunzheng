@@ -35,7 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
 /**
- * com.cunzheng.controller
+ * 电子存证合同管理模块，包括合同发起、合同签署、
+ * 合同查询、合同验证、合同下载
  */
 @RestController
 @RequestMapping("v1/evidence")
@@ -58,11 +59,11 @@ public class CunZhengController {
     ) throws Exception {
 
         BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
-        log.error(multipartFile.getOriginalFilename());
+        log.info(multipartFile.getOriginalFilename());
 
         //md5计算哈希
         String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-        log.error("fileHash:" + hash);
+        log.info("fileHash:" + hash);
 
 
         long currentTimeMillis = System.currentTimeMillis();
@@ -255,7 +256,7 @@ public class CunZhengController {
         }
     }
 
-    public void handlerReturnStatus(BaseResult<ContractInvokeRet> baseResult, ContractInvokeRet ret) {
+    private void handlerReturnStatus(BaseResult<ContractInvokeRet> baseResult, ContractInvokeRet ret) {
         int status = -1;
         if (ret.getReturnList() != null) {
             status = Integer.parseInt((String) ret.getReturnList().get(0));
@@ -267,6 +268,9 @@ public class CunZhengController {
                 break;
             case 2:
                 baseResult.returnWithValue(Code.CODE_PEMISSION_DENY, ret);
+                break;
+            case 3:
+                baseResult.returnWithValue(Code.CONTRACT_ALREADY_EXISTED, ret);
                 break;
             case 4:
                 baseResult.returnWithValue(Code.CODE_FILE_NOT_EXITED, ret);
