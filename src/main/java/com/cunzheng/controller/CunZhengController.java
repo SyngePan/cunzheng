@@ -72,6 +72,7 @@ public class CunZhengController {
         ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
                 hash, currentTimeMillis, 1, 0);
 
+        ret.getReturnList().add(hash);
         handlerReturnStatus(baseResult, ret);
 
         if (baseResult.getCode() == 0) {
@@ -205,6 +206,7 @@ public class CunZhengController {
         ContractInvokeRet ret = cunZhengContract.updateFile(accountJson, password, contractId, contractHash, hash,
                 currentTimeMillis, expectedStatus);
 
+        ret.getReturnList().add(hash);
         handlerReturnStatus(baseResult, ret);
         updateContractIntoDatabase(UserRole.LANDLORD, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
@@ -233,6 +235,7 @@ public class CunZhengController {
         ContractInvokeRet ret = cunZhengContract.updateFile(UserThreadLocal.get().getAccountJson(), password,
                 contractId, contractHash, hash, currentTimeMillis, expectedStatus);
 
+        ret.getReturnList().add(hash);
         handlerReturnStatus(baseResult, ret);
         updateContractIntoDatabase(UserRole.TENANT, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
