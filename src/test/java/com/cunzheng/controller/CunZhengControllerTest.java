@@ -1,6 +1,5 @@
 package com.cunzheng.controller;
 
-import com.cunzheng.configuration.Status;
 import com.cunzheng.entity.ContractBean;
 import com.cunzheng.repository.ContractRepository;
 import org.junit.Assert;
@@ -75,7 +74,7 @@ public class CunZhengControllerTest {
         File file = new File("/Users/chenghao/Desktop/batulu/blockchain/cunzheng/src/test/房屋租赁合同.pdf");
 
         ContractBean cb = contractRepository.save(new ContractBean("",new Date(),"fangdong","fangke",
-                "", Files.readAllBytes(file.toPath()),Status.NEW.name()));
+                "", Files.readAllBytes(file.toPath()),0));
 
         ContractBean queryCb = contractRepository.findByContractId(cb.getContractId());
 
