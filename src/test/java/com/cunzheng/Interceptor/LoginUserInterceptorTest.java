@@ -141,7 +141,7 @@ public class LoginUserInterceptorTest {
         when(handler.getMethod()).thenReturn(method);
         when(method.getAnnotation(UserEntitlement.class)).thenReturn(userEntitlement);
 
-        when(userEntitlement.value()).thenReturn(new UserRole[]{UserRole.LANDLORD});
+        when(userEntitlement.value()).thenReturn(new UserRole[]{UserRole.TENANT});
 
         //when
         boolean result = loginUserInterceptor.preHandle(request, response, handler);
