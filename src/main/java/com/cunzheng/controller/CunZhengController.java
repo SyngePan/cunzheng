@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.compress.utils.IOUtils;
 
@@ -76,29 +79,33 @@ public class CunZhengController {
         return baseResult;
     }
 
-    @PostMapping("/saveEvidence2")
-    @ApiOperation(value = "文件存证", notes = "文件存证")
-    public BaseResult saveEvidence(
+    @PostMapping("/launchContract")
+    @ApiOperation(value = "合同发起", notes = "合同发起")
+    public BaseResult launchContract(
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
-            @ApiParam("合同文本") @RequestParam MultipartFile multipartFile,
-            @ApiParam("合同编号") @RequestParam long contractId
+            @ApiParam("合同文本") @RequestParam MultipartFile multipartFile
     ) throws Exception {
 
         BaseResult baseResult = new BaseResult();
-        System.out.println(multipartFile.getOriginalFilename());
+        log.info(multipartFile.getOriginalFilename());
 
-        //md5计算哈希
+        //计算哈希
         String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-        System.out.println("fileHash:" + hash);
-
-
+        log.info("fileHash:" + hash);
+        
         ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
-                hash, System.currentTimeMillis(),0,contractId);
+                hash, System.currentTimeMillis(),1,0);
+        List<Object> list = ret.getReturnList();
+        if (list != null && list.size() > 1) {
+            ContractBean cb = new ContractBean(hash,new Date(),"fangdong","fangke",
+                    hash, multipartFile.getBytes(),0);
+            cb.setContractId((new Integer((String) list.get(1))));
+            contractRepository.save(cb);
+        }
         baseResult.returnWithValue(Code.SUCCESS, ret);
         return baseResult;
     }
-
 
     @PostMapping("/getHash")
     @ApiOperation(value = "原件验证", notes = "文件存证")
