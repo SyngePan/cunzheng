@@ -55,7 +55,7 @@ public class CunZhengController {
     @PostMapping("/saveEvidence")
     @ApiOperation(value = "文件存证", notes = "文件存证")
     public BaseResult<ContractInvokeRet>  saveEvidence(
-            @ApiParam("私钥文件") @RequestParam String username,
+            @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件") @RequestParam MultipartFile multipartFile
     ) throws Exception {
