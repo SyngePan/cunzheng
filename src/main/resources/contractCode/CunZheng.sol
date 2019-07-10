@@ -92,7 +92,7 @@ contract CunZheng {
         file.uploadTime.push(_uploadTime);
         file.userAddress.push(msg.sender);
         file.fileId = FileId_id;
-        file.status = 1;
+        file.status = _status;
 
         txHash2IdMap[txHash] = file.fileId;
         fileHash2IdMap[_fileHash] = file.fileId;
