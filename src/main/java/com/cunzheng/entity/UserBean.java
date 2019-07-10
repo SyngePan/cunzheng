@@ -19,6 +19,7 @@ public class UserBean {
     @Id
     @GeneratedValue
     private int userId;
+    @Column( unique = true)
     private String userName;
     private String password;
     private UserRole userRole;
