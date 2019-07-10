@@ -19,6 +19,7 @@ public class UserService {
      * 验证用户名是否已经被使用
      *
      * @param userName
+     * @return
      */
     public boolean hasUserNameCreated(String userName) {
         return userRepository.findByUserName(userName) != null;
