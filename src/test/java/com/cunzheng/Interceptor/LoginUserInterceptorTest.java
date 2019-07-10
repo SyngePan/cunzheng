@@ -41,7 +41,7 @@ public class LoginUserInterceptorTest {
             userRepository.delete(userBean);
         }
         String encodePassword = new String(DigestUtils.md5Digest(PASSWORD.getBytes()));
-        userBean = new UserBean(USERNAME, encodePassword, UserRole.OWNER, "{}");
+        userBean = new UserBean(USERNAME, encodePassword, UserRole.LANDLORD, "{}");
         userRepository.save(userBean);
     }
 
@@ -118,7 +118,7 @@ public class LoginUserInterceptorTest {
         when(handler.getMethod()).thenReturn(method);
         when(method.getAnnotation(UserEntitlement.class)).thenReturn(userEntitlement);
 
-        when(userEntitlement.value()).thenReturn(new UserRole[]{UserRole.OWNER});
+        when(userEntitlement.value()).thenReturn(new UserRole[]{UserRole.LANDLORD});
 
         //when
         boolean result = loginUserInterceptor.preHandle(request, response, handler);
@@ -141,7 +141,7 @@ public class LoginUserInterceptorTest {
         when(handler.getMethod()).thenReturn(method);
         when(method.getAnnotation(UserEntitlement.class)).thenReturn(userEntitlement);
 
-        when(userEntitlement.value()).thenReturn(new UserRole[]{UserRole.RENTER});
+        when(userEntitlement.value()).thenReturn(new UserRole[]{UserRole.LANDLORD});
 
         //when
         boolean result = loginUserInterceptor.preHandle(request, response, handler);

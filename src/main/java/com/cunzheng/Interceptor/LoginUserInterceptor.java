@@ -19,6 +19,14 @@ public class LoginUserInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     UserService userService;
 
+    /**
+     * 验证用户名密码和类型，决定放行请求或者拦截
+     *
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String userName = request.getParameter("username");
