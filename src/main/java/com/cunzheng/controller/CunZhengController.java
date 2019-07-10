@@ -35,13 +35,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
 /**
- * Created by zhangrui on 2019/7/7.
  * com.cunzheng.controller
  */
 @RestController
 @RequestMapping("v1/evidence")
 @Slf4j
-@Api(value = "电子存证", description = "电子存证模块功能")
+@Api(value = "电子存证", description = "电子存证合同管理模块功能")
 public class CunZhengController {
 
     @Autowired
@@ -50,8 +49,8 @@ public class CunZhengController {
     private ContractRepository contractRepository;
 
 
-    @PostMapping("/saveEvidence")
-    @ApiOperation(value = "文件存证", notes = "文件存证")
+    @PostMapping("/launchContract")
+    @ApiOperation(value = "合同发起", notes = "合同发起")
     public BaseResult<ContractInvokeRet> saveEvidence(
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
@@ -87,33 +86,6 @@ public class CunZhengController {
         return baseResult;
     }
 
-    @PostMapping("/launchContract")
-    @ApiOperation(value = "合同发起", notes = "合同发起")
-    public BaseResult launchContract(
-            @ApiParam("用户名") @RequestParam String username,
-            @ApiParam("密码") @RequestParam String password,
-            @ApiParam("合同文本") @RequestParam MultipartFile multipartFile
-    ) throws Exception {
-
-        BaseResult baseResult = new BaseResult();
-        log.info(multipartFile.getOriginalFilename());
-
-        //计算哈希
-        String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-        log.info("fileHash:" + hash);
-
-        ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
-                hash, System.currentTimeMillis(), 1, 0);
-        List<Object> list = ret.getReturnList();
-        if (list != null && list.size() > 1) {
-            ContractBean cb = new ContractBean(hash, new Date(), "fangdong", "fangke",
-                    hash, multipartFile.getBytes(), 0);
-            cb.setContractId((new Integer((String) list.get(1))));
-            contractRepository.save(cb);
-        }
-        baseResult.returnWithValue(Code.SUCCESS, ret);
-        return baseResult;
-    }
 
     @PostMapping("/getHash")
     @ApiOperation(value = "原件验证", notes = "文件存证")
@@ -136,8 +108,6 @@ public class CunZhengController {
         return baseResult;
     }
 
-
-    //文件哈希验证 TODO
 
     @PostMapping("/getFileHash")
     @ApiOperation(value = "文件哈希验证", notes = "文件哈希验证")
