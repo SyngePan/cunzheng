@@ -36,8 +36,6 @@ public class CunZhengController {
     private ContractRepository contractRepository;
 
 
-
-
     @PostMapping("/saveEvidence")
     @ApiOperation(value = "文件存证", notes = "文件存证")
     public BaseResult saveEvidence(
@@ -78,7 +76,7 @@ public class CunZhengController {
 
 
         ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
-                hash, System.currentTimeMillis(),0,contractId);
+                hash, System.currentTimeMillis(), 0, contractId);
         baseResult.returnWithValue(Code.SUCCESS, ret);
         return baseResult;
     }

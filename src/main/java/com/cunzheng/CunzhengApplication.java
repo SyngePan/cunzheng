@@ -1,7 +1,9 @@
 package com.cunzheng;
 
+import com.cunzheng.contract.BlockUtil;
 import com.cunzheng.entity.ContractBean;
 import com.cunzheng.repository.ContractRepository;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,8 +25,12 @@ public class CunzhengApplication {
     @PostConstruct
     public void init() {
         System.out.println("init...");
-        //contractRepository.save(contractRepository.save(new ContractBean(1, "d41d8cd98f00b204e9800998ecf8427e", new Date(),
-         //       "fangdong", "fangke", "d41d8cd98f00b204e9800998ecf8427e")));
+        //获取contract 地址加载到内存
+        String json = BlockUtil.getAdminKey();
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String contractAddress = jsonObject.getString("contractAddress");
+
+        BlockUtil.CONTRACT_ADDRESS = contractAddress;
     }
 
 }
