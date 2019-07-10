@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import com.cunzheng.Interceptor.UserEntitlement;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -51,6 +52,7 @@ public class CunZhengController {
 
 
     @PostMapping("/launchContract")
+    @UserEntitlement(value={UserRole.LANDLORD})
     @ApiOperation(value = "合同发起", notes = "合同发起")
     public BaseResult<ContractInvokeRet> saveEvidence(
             @ApiParam("用户名") @RequestParam String username,
@@ -179,6 +181,7 @@ public class CunZhengController {
     }
 
     @PostMapping("/landlordSign")
+    @UserEntitlement(value={UserRole.LANDLORD})
     @ApiOperation(value = "房东签约", notes = "房东签约")
     public BaseResult<ContractInvokeRet> landlordSign(@ApiParam("用户") @RequestParam String username,
                                                       @ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
@@ -208,6 +211,7 @@ public class CunZhengController {
     }
 
     @PostMapping("/tenantSign")
+    @UserEntitlement(value={UserRole.TENANT})
     @ApiOperation(value = "租客签约", notes = "租客签约")
     public BaseResult<ContractInvokeRet> tenantSign(@ApiParam("用户") @RequestParam String username,
                                                     @ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
