@@ -177,7 +177,7 @@ public class CunZhengContract {
 	public ContractInvokeRet saveHash2(String accountJson, String password,
                                       String fileHash, long uploadTime, int fileStatus, long fileId) throws Exception {
 
-        String funcName = "saveHash2";
+        String funcName = "saveHash";
         String contractAddress = BlockUtil.CONTRACT_ADDRESS;
 
         FuncParamReal[] funcParamReals = new FuncParamReal[4];
