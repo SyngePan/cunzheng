@@ -5,10 +5,10 @@ public class UserThreadLocal {
 
     }
 
-    private static final ThreadLocal<UserBean> local = new ThreadLocal<UserBean>();
+    private static final ThreadLocal<UserBean> local = new ThreadLocal<>();
 
     public static void set(UserBean user){
-        local.set(user);;
+        local.set(user);
     }
 
     public static UserBean get(){

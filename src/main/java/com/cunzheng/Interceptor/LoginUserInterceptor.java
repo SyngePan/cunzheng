@@ -24,26 +24,34 @@ public class LoginUserInterceptor extends HandlerInterceptorAdapter {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         UserBean userBean = userService.verifyUserNameAndPassWord(userName, password);
+        //user not exists with the user name and password
         if (userBean == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid username or password.");
             return false;
         }
 
+        //check method annotation to verify the access
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             UserEntitlement annotation = method.getAnnotation(UserEntitlement.class);
+            //no annotation found, pass
             if (annotation == null) {
                 UserThreadLocal.set(userBean);
                 return true;
             }
 
+            //annotation contains, pass
             for(int i = 0;i<annotation.value().length;i++){
                 if(userBean.getUserRole().equals(annotation.value()[i])){
                     UserThreadLocal.set(userBean);
                     return true;
                 }
             }
+        }else{
+            UserThreadLocal.set(userBean);
+            return true;
         }
+        //otherwise, access denied
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied.");
         return false;
 
