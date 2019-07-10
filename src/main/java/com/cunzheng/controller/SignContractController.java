@@ -49,14 +49,14 @@ public class SignContractController {
 
 		log.info("开始验证合同是否被更改，状态，以及更新合同");
 		BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
-		System.out.println(multipartFile.getOriginalFilename());
+		log.info(multipartFile.getOriginalFilename());
 
 		// md5计算哈希
 		String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-		System.out.println("fileHash:" + hash);
+		log.info("fileHash:" + hash);
 
 		long currentTimeMillis = System.currentTimeMillis();
-		System.out.println("currentTimeMillis:" + currentTimeMillis);
+		log.info("currentTimeMillis:" + currentTimeMillis);
 		String accountJson = UserThreadLocal.get().getAccountJson();
 		log.info(accountJson);
 		int expectedStatus = 1;
@@ -78,14 +78,14 @@ public class SignContractController {
 
 		log.info("开始验证合同是否被更改，状态，以及更新合同");
 		BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
-		System.out.println(multipartFile.getOriginalFilename());
+		log.info(multipartFile.getOriginalFilename());
 
 		// md5计算哈希
 		String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-		System.out.println("fileHash:" + hash);
+		log.info("fileHash:" + hash);
 
 		long currentTimeMillis = System.currentTimeMillis();
-		System.out.println("currentTimeMillis:" + currentTimeMillis);
+		log.info("currentTimeMillis:" + currentTimeMillis);
 		int expectedStatus = 2;
 		ContractInvokeRet ret = cunZhengContract.updateFile(UserThreadLocal.get().getAccountJson(), password,
 				contractId, contractHash, hash, currentTimeMillis, expectedStatus);
@@ -101,8 +101,7 @@ public class SignContractController {
 		if (baseResult.getCode() == 0) {
 			String address = JSONObject.fromObject(UserThreadLocal.get().getAccountJson()).getString("address");
 
-			contractRepository.findByContractId(contractId);
-			ContractBean contractBean = new ContractBean();
+			ContractBean contractBean = contractRepository.findByContractId(contractId);
 			contractBean.setContractId(contractId);
 			contractBean.setContractHash(hash);
 			contractBean.setUploadTime(new Date());
