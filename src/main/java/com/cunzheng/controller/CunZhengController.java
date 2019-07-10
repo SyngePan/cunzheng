@@ -296,7 +296,7 @@ public class CunZhengController {
                 baseResult.returnWithValue(Code.SUCCESS, ret);
                 break;
             case 2:
-                baseResult.returnWithValue(Code.CODE_PEMISSION_DENY, ret);
+                baseResult.returnWithValue(Code.CODE_PERMISSION_DENY, ret);
                 break;
             case 4:
                 baseResult.returnWithValue(Code.CODE_FILE_NOT_EXITED, ret);

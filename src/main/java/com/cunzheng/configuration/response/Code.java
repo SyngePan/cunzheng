@@ -20,7 +20,7 @@ public enum  Code {
 	CODE_FILE_NOT_EXITED(400,"合同不存在"),
 	CODE_FILE_MODIFIED(500,"合同被修改"),
 	CODE_FILE_STATUS_ERROR(600,"合同状态错误"),
-	CODE_PEMISSION_DENY(700,"权限错误");	
+	CODE_PERMISSION_DENY(700,"权限错误");
 
     private int code;
     private String message;
