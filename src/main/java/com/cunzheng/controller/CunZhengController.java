@@ -13,13 +13,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +31,7 @@ import org.apache.commons.compress.utils.IOUtils;
 
 /**
  * Created by zhangrui on 2019/7/7.
- * com.cunzheng_01.controller
+ * com.cunzheng.controller
  */
 @RestController
 @RequestMapping("v1/evidence")
@@ -171,7 +174,32 @@ public class CunZhengController {
         return baseResult;
     }
 
+    @RequestMapping(path="/downloadContract", method= RequestMethod.GET)
+    @ApiOperation(value = "下载合同", notes = "下载合同")
+    public ResponseEntity<Resource> downloadContract(
+            @ApiParam("用户名") @RequestParam String username,
+            @ApiParam("密码") @RequestParam String password,
+            @ApiParam("合同编号") @RequestParam int contractId) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control","no-cache,no-store,must-revalidate");
+        headers.add("Pragma","no-cache");
+        headers.add("Expires","0");
+        ContractBean contractBean = contractRepository.findByContractId(contractId);
+        if (contractBean == null || contractBean.getContent() == null) {
+            String message = "没有合同编号为" + contractId + "的合同";
+            return ResponseEntity.ok()
+                    .contentLength(message.getBytes().length)
+                    .contentType(MediaType.parseMediaType("text/plain"))
+                    .body(new ByteArrayResource(message.getBytes()));
 
-    //交易哈希验证 TODO
+        }
+        ByteArrayResource resource = new ByteArrayResource(contractBean.getContent());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(contractBean.getContent().length)
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(resource);
+
+    }
 
 }
