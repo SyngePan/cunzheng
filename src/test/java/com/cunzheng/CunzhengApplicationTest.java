@@ -31,40 +31,6 @@ public class CunzhengApplicationTest {
 
 
 	@Test
-	public void contextLoads() throws IOException {
-
-
-		/*userRepository.save(new UserBean("aaa", "aaa", UserRole.OWNER,null));
-		userRepository.save(new UserBean("bbb","bbb",UserRole.OWNER,null));
-		userRepository.save(new UserBean("ccc","ccc",UserRole.OWNER,null));
-		userRepository.save(new UserBean("ddd","ddd",UserRole.OWNER,null));
-		userRepository.save(new UserBean("eee","eee",UserRole.OWNER,null));
-
-		//Assert.assertEquals(9,userRepository.findAll().size());
-
-		Assert.assertEquals(5,userRepository.findByUserName("eee").getUserId());
-
-
-		userRepository.delete(userRepository.findByUserName("aaa"));*/
-		//Assert.assertEquals(4,userRepository.findAll().size());
-
-		File file = new File("/Users/chenghao/Desktop/batulu/blockchain/cunzheng/src/test/房屋租赁合同.pdf");
-
-		contractRepository.save(new ContractBean("",new Date(),"fangdong","fangke",
-				"", Files.readAllBytes(file.toPath()), 1));
-
-		ContractBean cb = contractRepository.findByContractId(1);
-		//contractRepository.save(new ContractBean(2,"",new Date(),"fangdong1","fangke1",""));
-		//contractRepository.save(new ContractBean(3,"",new Date(),"fangdong2","fangke2",""));
-		//contractRepository.save(new ContractBean(4,"",new Date(),"fangdong3","fangke3",""));
-		//contractRepository.save(new ContractBean(5,"",new Date(),"fangdong4","fangke4",""));
-
-		//Assert.assertEquals(5,contractRepository.findAll().size());
-
-	}
-
-
-	@Test
 	public void contractBeanSaveTest() throws Exception {
 		ContractBean bean = new ContractBean();
 		bean.setContractId(1);
