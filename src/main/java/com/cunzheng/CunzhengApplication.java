@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import javax.annotation.PostConstruct;
 import java.util.Date;
 
+@Slf4j
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class CunzhengApplication {
 
@@ -22,7 +23,7 @@ public class CunzhengApplication {
 
     @PostConstruct
     public void init() {
-        System.out.println("init...");
+        log.info("init...");
         //contractRepository.save(contractRepository.save(new ContractBean(1, "d41d8cd98f00b204e9800998ecf8427e", new Date(),
          //       "fangdong", "fangke", "d41d8cd98f00b204e9800998ecf8427e")));
     }
