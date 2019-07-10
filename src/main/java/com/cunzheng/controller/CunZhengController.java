@@ -50,17 +50,15 @@ public class CunZhengController {
     private ContractRepository contractRepository;
 
 
-
-
     @PostMapping("/saveEvidence")
     @ApiOperation(value = "文件存证", notes = "文件存证")
-    public BaseResult<ContractInvokeRet>  saveEvidence(
+    public BaseResult<ContractInvokeRet> saveEvidence(
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件") @RequestParam MultipartFile multipartFile
     ) throws Exception {
 
-        BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet> ();
+        BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
         log.error(multipartFile.getOriginalFilename());
 
         //md5计算哈希
@@ -70,21 +68,21 @@ public class CunZhengController {
 
         long currentTimeMillis = System.currentTimeMillis();
         ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
-                hash, currentTimeMillis,1,0);
-        
+                hash, currentTimeMillis, 1, 0);
+
         handlerReturnStatus(baseResult, ret);
-		
+
         if (baseResult.getCode() == 0) {
-        ContractBean contractBean=new ContractBean();
-		contractBean.setContractId(Integer.parseInt(ret.getReturnList().get(1).toString()));
-        contractBean.setContractHash(hash);
-        contractBean.setUploadTime(new Date());
-        contractBean.setLandlordSignature(null);
-        contractBean.setTenantSignature(null);
-        contractBean.setFileHash(hash);
-        contractBean.setContent( IOUtils.toByteArray(multipartFile.getInputStream()));
-        contractBean.setStatus(1);
-        contractRepository.save(contractBean);
+            ContractBean contractBean = new ContractBean();
+            contractBean.setContractId(Integer.parseInt(ret.getReturnList().get(1).toString()));
+            contractBean.setContractHash(hash);
+            contractBean.setUploadTime(new Date());
+            contractBean.setLandlordSignature(null);
+            contractBean.setTenantSignature(null);
+            contractBean.setFileHash(hash);
+            contractBean.setContent(IOUtils.toByteArray(multipartFile.getInputStream()));
+            contractBean.setStatus(1);
+            contractRepository.save(contractBean);
         }
         return baseResult;
     }
@@ -103,13 +101,13 @@ public class CunZhengController {
         //计算哈希
         String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
         log.info("fileHash:" + hash);
-        
+
         ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
-                hash, System.currentTimeMillis(),1,0);
+                hash, System.currentTimeMillis(), 1, 0);
         List<Object> list = ret.getReturnList();
         if (list != null && list.size() > 1) {
-            ContractBean cb = new ContractBean(hash,new Date(),"fangdong","fangke",
-                    hash, multipartFile.getBytes(),0);
+            ContractBean cb = new ContractBean(hash, new Date(), "fangdong", "fangke",
+                    hash, multipartFile.getBytes(), 0);
             cb.setContractId((new Integer((String) list.get(1))));
             contractRepository.save(cb);
         }
@@ -181,16 +179,16 @@ public class CunZhengController {
         return baseResult;
     }
 
-    @RequestMapping(path="/downloadContract", method= RequestMethod.GET)
+    @RequestMapping(path = "/downloadContract", method = RequestMethod.GET)
     @ApiOperation(value = "下载合同", notes = "下载合同")
     public ResponseEntity<Resource> downloadContract(
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("合同编号") @RequestParam int contractId) throws IOException {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control","no-cache,no-store,must-revalidate");
-        headers.add("Pragma","no-cache");
-        headers.add("Expires","0");
+        headers.add("Cache-Control", "no-cache,no-store,must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
         ContractBean contractBean = contractRepository.findByContractId(contractId);
         if (contractBean == null || contractBean.getContent() == null) {
             String message = "没有合同编号为" + contractId + "的合同";
@@ -209,110 +207,110 @@ public class CunZhengController {
 
     }
 
-	@PostMapping("/landlordSign")
-	@ApiOperation(value = "房东签约", notes = "房东签约")
-	public BaseResult<ContractInvokeRet> landlordSign(@ApiParam("用户") @RequestParam String username,
-			@ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
-			@ApiParam("之前合同文件Hash(隐藏域)") @RequestParam String contractHash,
-			@ApiParam("文件") @RequestParam MultipartFile multipartFile) throws Exception {
-		log.info("验证用户");
+    @PostMapping("/landlordSign")
+    @ApiOperation(value = "房东签约", notes = "房东签约")
+    public BaseResult<ContractInvokeRet> landlordSign(@ApiParam("用户") @RequestParam String username,
+                                                      @ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
+                                                      @ApiParam("之前合同文件Hash(隐藏域)") @RequestParam String contractHash,
+                                                      @ApiParam("文件") @RequestParam MultipartFile multipartFile) throws Exception {
+        log.info("验证用户");
 
-		log.info("开始验证合同是否被更改，状态，以及更新合同");
-		BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
-		log.info(multipartFile.getOriginalFilename());
+        log.info("开始验证合同是否被更改，状态，以及更新合同");
+        BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
+        log.info(multipartFile.getOriginalFilename());
 
-		// md5计算哈希
-		String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-		log.info("fileHash:" + hash);
+        // md5计算哈希
+        String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
+        log.info("fileHash:" + hash);
 
-		long currentTimeMillis = System.currentTimeMillis();
-		log.info("currentTimeMillis:" + currentTimeMillis);
-		String accountJson = UserThreadLocal.get().getAccountJson();
-		log.info(accountJson);
-		int expectedStatus = 1;
-		ContractInvokeRet ret = cunZhengContract.updateFile(accountJson, password, contractId, contractHash, hash,
-				currentTimeMillis, expectedStatus);
+        long currentTimeMillis = System.currentTimeMillis();
+        log.info("currentTimeMillis:" + currentTimeMillis);
+        String accountJson = UserThreadLocal.get().getAccountJson();
+        log.info(accountJson);
+        int expectedStatus = 1;
+        ContractInvokeRet ret = cunZhengContract.updateFile(accountJson, password, contractId, contractHash, hash,
+                currentTimeMillis, expectedStatus);
 
-		handlerReturnStatus(baseResult, ret);
-		updateContractIntoDatabase(UserRole.OWNER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
-		return baseResult;
-	}
+        handlerReturnStatus(baseResult, ret);
+        updateContractIntoDatabase(UserRole.OWNER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
+        return baseResult;
+    }
 
-	@PostMapping("/tenantSign")
-	@ApiOperation(value = "租客签约", notes = "租客签约")
-	public BaseResult<ContractInvokeRet> tenantSign(@ApiParam("用户") @RequestParam String username,
-			@ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
-			@ApiParam("之前合同文件Hash(隐藏域)") @RequestParam String contractHash,
-			@ApiParam("文件") @RequestParam MultipartFile multipartFile) throws Exception {
-		log.info("验证用户");
+    @PostMapping("/tenantSign")
+    @ApiOperation(value = "租客签约", notes = "租客签约")
+    public BaseResult<ContractInvokeRet> tenantSign(@ApiParam("用户") @RequestParam String username,
+                                                    @ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
+                                                    @ApiParam("之前合同文件Hash(隐藏域)") @RequestParam String contractHash,
+                                                    @ApiParam("文件") @RequestParam MultipartFile multipartFile) throws Exception {
+        log.info("验证用户");
 
-		log.info("开始验证合同是否被更改，状态，以及更新合同");
-		BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
-		log.info(multipartFile.getOriginalFilename());
+        log.info("开始验证合同是否被更改，状态，以及更新合同");
+        BaseResult<ContractInvokeRet> baseResult = new BaseResult<ContractInvokeRet>();
+        log.info(multipartFile.getOriginalFilename());
 
-		// md5计算哈希
-		String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-		log.info("fileHash:" + hash);
+        // md5计算哈希
+        String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
+        log.info("fileHash:" + hash);
 
-		long currentTimeMillis = System.currentTimeMillis();
-		log.info("currentTimeMillis:" + currentTimeMillis);
-		int expectedStatus = 2;
-		ContractInvokeRet ret = cunZhengContract.updateFile(UserThreadLocal.get().getAccountJson(), password,
-				contractId, contractHash, hash, currentTimeMillis, expectedStatus);
+        long currentTimeMillis = System.currentTimeMillis();
+        log.info("currentTimeMillis:" + currentTimeMillis);
+        int expectedStatus = 2;
+        ContractInvokeRet ret = cunZhengContract.updateFile(UserThreadLocal.get().getAccountJson(), password,
+                contractId, contractHash, hash, currentTimeMillis, expectedStatus);
 
-		handlerReturnStatus(baseResult, ret);
-		updateContractIntoDatabase(UserRole.RENTER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
-		return baseResult;
-	}
+        handlerReturnStatus(baseResult, ret);
+        updateContractIntoDatabase(UserRole.RENTER, contractId, multipartFile, baseResult, hash, currentTimeMillis);
+        return baseResult;
+    }
 
-	private void updateContractIntoDatabase(UserRole role, int contractId, MultipartFile multipartFile,
-			BaseResult<ContractInvokeRet> baseResult, String hash, long currentTimeMillis) throws IOException {
+    private void updateContractIntoDatabase(UserRole role, int contractId, MultipartFile multipartFile,
+                                            BaseResult<ContractInvokeRet> baseResult, String hash, long currentTimeMillis) throws IOException {
 
-		if (baseResult.getCode() == 0) {
-			String address = JSONObject.fromObject(UserThreadLocal.get().getAccountJson()).getString("address");
+        if (baseResult.getCode() == 0) {
+            String address = JSONObject.fromObject(UserThreadLocal.get().getAccountJson()).getString("address");
 
-			ContractBean contractBean = contractRepository.findByContractId(contractId);
-			contractBean.setContractId(contractId);
-			contractBean.setContractHash(hash);
-			contractBean.setUploadTime(new Date());
-			if ((UserRole.OWNER).equals(role)) {
-				contractBean.setLandlordSignature(address);
-			} else {
-				contractBean.setTenantSignature(address);
-			}
-			contractBean.setFileHash(hash);
-			contractBean.setContent(IOUtils.toByteArray(multipartFile.getInputStream()));
-			contractBean.setStatus(Integer.parseInt(baseResult.getData().getReturnList().get(1).toString()));
-			contractRepository.save(contractBean);
-		}
-	}
-	
-	public void handlerReturnStatus(BaseResult<ContractInvokeRet> baseResult, ContractInvokeRet ret) {
-		int status = -1;
-		if (ret.getReturnList() != null) {
-			status = Integer.parseInt((String) ret.getReturnList().get(0));
-		}
+            ContractBean contractBean = contractRepository.findByContractId(contractId);
+            contractBean.setContractId(contractId);
+            contractBean.setContractHash(hash);
+            contractBean.setUploadTime(new Date());
+            if ((UserRole.OWNER).equals(role)) {
+                contractBean.setLandlordSignature(address);
+            } else {
+                contractBean.setTenantSignature(address);
+            }
+            contractBean.setFileHash(hash);
+            contractBean.setContent(IOUtils.toByteArray(multipartFile.getInputStream()));
+            contractBean.setStatus(Integer.parseInt(baseResult.getData().getReturnList().get(1).toString()));
+            contractRepository.save(contractBean);
+        }
+    }
 
-		switch (status) {
-		case 0:
-			baseResult.returnWithValue(Code.SUCCESS, ret);
-			break;
-		case 2:
-			baseResult.returnWithValue(Code.CODE_PEMISSION_DENY, ret);
-			break;
-		case 4:
-			baseResult.returnWithValue(Code.CODE_FILE_NOT_EXITED, ret);
-			break;
-		case 5:
-			baseResult.returnWithValue(Code.CODE_FILE_MODIFIED, ret);
-			break;
-		case 6:
-			baseResult.returnWithValue(Code.CODE_FILE_STATUS_ERROR, ret);
-			break;
-		default:
-			baseResult.returnWithValue(Code.SYSTEM_ERROR, ret);
-			break;
-		}
+    public void handlerReturnStatus(BaseResult<ContractInvokeRet> baseResult, ContractInvokeRet ret) {
+        int status = -1;
+        if (ret.getReturnList() != null) {
+            status = Integer.parseInt((String) ret.getReturnList().get(0));
+        }
 
-	}
+        switch (status) {
+            case 0:
+                baseResult.returnWithValue(Code.SUCCESS, ret);
+                break;
+            case 2:
+                baseResult.returnWithValue(Code.CODE_PEMISSION_DENY, ret);
+                break;
+            case 4:
+                baseResult.returnWithValue(Code.CODE_FILE_NOT_EXITED, ret);
+                break;
+            case 5:
+                baseResult.returnWithValue(Code.CODE_FILE_MODIFIED, ret);
+                break;
+            case 6:
+                baseResult.returnWithValue(Code.CODE_FILE_STATUS_ERROR, ret);
+                break;
+            default:
+                baseResult.returnWithValue(Code.SYSTEM_ERROR, ret);
+                break;
+        }
+
+    }
 }
