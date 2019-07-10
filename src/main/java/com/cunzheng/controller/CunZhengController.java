@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
+import org.apache.commons.compress.utils.IOUtils;
 
 /**
  * Created by zhangrui on 2019/7/7.
@@ -54,9 +57,22 @@ public class CunZhengController {
         System.out.println("fileHash:" + hash);
 
 
+        long currentTimeMillis = System.currentTimeMillis();
         ContractInvokeRet ret = cunZhengContract.saveHash(UserThreadLocal.get().getAccountJson(), password,
-                hash, System.currentTimeMillis());
+                hash, currentTimeMillis);
         baseResult.returnWithValue(Code.SUCCESS, ret);
+        
+        ContractBean contractBean=new ContractBean();
+		contractBean.setContractId(Integer.parseInt(ret.getReturnList().get(1).toString()));
+        contractBean.setContractHash(hash);
+        contractBean.setUploadTime(new Date());
+        contractBean.setLandlordSignature(null);
+        contractBean.setTenantSignature(null);
+        contractBean.setFileHash(hash);
+        contractBean.setContent( IOUtils.toByteArray(multipartFile.getInputStream()));
+        contractBean.setStatus(1);
+        contractRepository.save(contractBean);
+        
         return baseResult;
     }
 

@@ -15,7 +15,11 @@ public enum  Code {
     CONTRACT_ERROR(9001,"合约调用错误"),
     SYSTEM_ERROR(9999, "系统异常，请稍后重试"),
 
-    CONTRACT_NOT_EXIST(300,"合同不存在");
+    CONTRACT_NOT_EXIST(300,"合同不存在"),
+	
+	CODE_FILE_NOT_EXITED(400,"合同不存在"),
+	CODE_FILE_MODIFIED(500,"合同被修改"),
+	CODE_FILE_STATUS_ERROR(600,"合同状态错误");
 
     private int code;
     private String message;
