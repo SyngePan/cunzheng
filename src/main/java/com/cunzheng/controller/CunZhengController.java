@@ -5,6 +5,7 @@ import com.cunzheng.configuration.response.Code;
 import com.cunzheng.contract.CunZhengContract;
 import com.cunzheng.contract.response.ContractInvokeRet;
 import com.cunzheng.entity.ContractBean;
+import com.cunzheng.entity.UserThreadLocal;
 import com.cunzheng.repository.ContractRepository;
 import com.cunzheng.util.FileUtil;
 import io.swagger.annotations.Api;
@@ -40,7 +41,7 @@ public class CunZhengController {
     @PostMapping("/saveEvidence")
     @ApiOperation(value = "文件存证", notes = "文件存证")
     public BaseResult saveEvidence(
-            @ApiParam("私钥文件") @RequestParam String accountJson,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件") @RequestParam MultipartFile multipartFile
     ) throws Exception {
@@ -53,8 +54,31 @@ public class CunZhengController {
         System.out.println("fileHash:" + hash);
 
 
-        ContractInvokeRet ret = cunZhengContract.saveHash(accountJson, password,
+        ContractInvokeRet ret = cunZhengContract.saveHash(UserThreadLocal.get().getAccountJson(), password,
                 hash, System.currentTimeMillis());
+        baseResult.returnWithValue(Code.SUCCESS, ret);
+        return baseResult;
+    }
+
+    @PostMapping("/saveEvidence2")
+    @ApiOperation(value = "文件存证", notes = "文件存证")
+    public BaseResult saveEvidence(
+            @ApiParam("用户名") @RequestParam String username,
+            @ApiParam("密码") @RequestParam String password,
+            @ApiParam("合同文本") @RequestParam MultipartFile multipartFile,
+            @ApiParam("合同编号") @RequestParam long contractId
+    ) throws Exception {
+
+        BaseResult baseResult = new BaseResult();
+        System.out.println(multipartFile.getOriginalFilename());
+
+        //md5计算哈希
+        String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
+        System.out.println("fileHash:" + hash);
+
+
+        ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
+                hash, System.currentTimeMillis(),0,contractId);
         baseResult.returnWithValue(Code.SUCCESS, ret);
         return baseResult;
     }
@@ -63,7 +87,7 @@ public class CunZhengController {
     @PostMapping("/getHash")
     @ApiOperation(value = "原件验证", notes = "文件存证")
     public BaseResult getHash(
-            @ApiParam("私钥文件") @RequestParam String accountJson,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件") @RequestParam MultipartFile multipartFile
     ) throws Exception {
@@ -75,7 +99,7 @@ public class CunZhengController {
         String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
         System.out.println("fileHash:" + hash);
 
-        ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
+        ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                 hash);
         baseResult.returnWithValue(Code.SUCCESS, ret);
         return baseResult;
@@ -87,14 +111,14 @@ public class CunZhengController {
     @PostMapping("/getFileHash")
     @ApiOperation(value = "文件哈希验证", notes = "文件哈希验证")
     public BaseResult getFileHash(
-            @ApiParam("私钥文件") @RequestParam String accountJson,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("文件哈希") @RequestParam String fileHash
     ) throws Exception {
 
         BaseResult baseResult = new BaseResult();
 
-        ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
+        ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                 fileHash);
         baseResult.returnWithValue(Code.SUCCESS, ret);
         return baseResult;
@@ -104,7 +128,7 @@ public class CunZhengController {
     @PostMapping("/getContract")
     @ApiOperation(value = "查询合同", notes = "查询合同")
     public BaseResult getContract(
-            @ApiParam("私钥文件") @RequestParam String accountJson,
+            @ApiParam("私钥文件") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("合同编号") @RequestParam int contractId
     ) throws Exception {
@@ -114,7 +138,7 @@ public class CunZhengController {
         ContractBean contractBean = contractRepository.findByContractId(contractId);
 
         if (contractBean != null && contractBean.getFileHash() != null) {
-            ContractInvokeRet ret = cunZhengContract.getFileByHash(accountJson, password,
+            ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                     contractBean.getFileHash());
             baseResult.returnWithValue(Code.SUCCESS, ret);
         } else {

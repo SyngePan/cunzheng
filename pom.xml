@@ -31,6 +31,7 @@
             <groupId>cn.hyperchain</groupId>
             <artifactId>hyperchainsdk</artifactId>
             <scope>system</scope>
+            <version>0.0.1</version>
             <systemPath>${project.basedir}/lib/hyperchainsdk-4.2.5-jar-with-dependencies.jar</systemPath>
         </dependency>
         <!-- Swagger2构建RESTful API文档 -->
