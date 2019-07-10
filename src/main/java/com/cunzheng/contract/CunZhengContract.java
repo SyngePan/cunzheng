@@ -157,23 +157,6 @@ public class CunZhengContract {
     }
 
 
-    public ContractInvokeRet saveHash(String accountJson, String password,
-                                      String fileHash, long uploadTime) throws Exception {
-
-        String funcName = "saveHash";
-        String contractAddress = BlockUtil.CONTRACT_ADDRESS;
-
-        FuncParamReal[] funcParamReals = new FuncParamReal[4];
-
-        funcParamReals[0] = new FuncParamReal("bytes", fileHash.getBytes(Charset.forName("UTF-8")));
-        funcParamReals[1] = new FuncParamReal("uint", uploadTime);
-        funcParamReals[2] = new FuncParamReal("uint", 0);
-        funcParamReals[3] = new FuncParamReal("uint", 0);
-
-        return callFunction(accountJson, password, contractAddress,
-                funcName, funcParamReals, false);
-    }
-
 	public ContractInvokeRet saveHash2(String accountJson, String password,
                                       String fileHash, long uploadTime, int fileStatus, long fileId) throws Exception {
 
