@@ -53,11 +53,11 @@ public class CunZhengController {
     ) throws Exception {
 
         BaseResult baseResult = new BaseResult();
-        System.out.println(multipartFile.getOriginalFilename());
+        log.error(multipartFile.getOriginalFilename());
 
         //md5计算哈希
         String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-        System.out.println("fileHash:" + hash);
+        log.error("fileHash:" + hash);
 
 
         long currentTimeMillis = System.currentTimeMillis();
@@ -116,11 +116,11 @@ public class CunZhengController {
     ) throws Exception {
 
         BaseResult baseResult = new BaseResult();
-        System.out.println(multipartFile.getOriginalFilename());
+        log.error(multipartFile.getOriginalFilename());
 
         //md5计算哈希
         String hash = FileUtil.md5HashCode(multipartFile.getInputStream());
-        System.out.println("fileHash:" + hash);
+        log.error("fileHash:" + hash);
 
         ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                 hash);
