@@ -274,7 +274,7 @@ public class CunZhengController {
                 baseResult.returnWithValue(Code.SUCCESS, ret);
                 break;
             case 2:
-                baseResult.returnWithValue(Code.CODE_PEMISSION_DENY, ret);
+                baseResult.returnWithValue(Code.CODE_PERMISSION_DENY, ret);
                 break;
             case 3:
                 baseResult.returnWithValue(Code.CONTRACT_ALREADY_EXISTED, ret);
