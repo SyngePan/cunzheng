@@ -146,7 +146,7 @@ public class BlockUtil {
         //获取签名账户 公私钥
         String accountJson = newAccountSM2("123");
 
-        System.out.println("部署私钥：" + accountJson);
+        log.info("部署私钥：" + accountJson);
 
         //构建部署交易
         Transaction transaction = new Transaction(
@@ -193,7 +193,7 @@ public class BlockUtil {
 
         ReceiptReturn receiptReturn = hyperchainAPI.invokeContract(transaction, "saveUser", abi);
 
-        System.out.println(JSONObject.fromObject(receiptReturn).toString(4));
+        log.info(JSONObject.fromObject(receiptReturn).toString(4));
     }
 
 
