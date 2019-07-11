@@ -1,0 +1,122 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BaseResult</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.cunzheng.configuration.response</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BaseResult (com.cunzheng.configuration.response)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BaseResult</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.cunzheng.configuration.response;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import lombok.Data;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Created by zhangrui on 2019/7/4.
+<i>7</i>&nbsp; * com.cunzheng.configuration.response
+<i>8</i>&nbsp; */
+<b class="nc"><i>9</i>&nbsp;@Data</b>
+<i>10</i>&nbsp;public class BaseResult&lt;T&gt; {
+<b class="nc"><i>11</i>&nbsp;    private int code;</b>
+<b class="nc"><i>12</i>&nbsp;    private String message;</b>
+<b class="nc"><i>13</i>&nbsp;    private T data = (T) new Object();</b>
+<i>14</i>&nbsp;
+<b class="nc"><i>15</i>&nbsp;    public BaseResult() {</b>
+<b class="nc"><i>16</i>&nbsp;        this.data = (T) new Object();</b>
+<b class="nc"><i>17</i>&nbsp;    }</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    public BaseResult(String msg) {
+<b class="nc"><i>20</i>&nbsp;        this();</b>
+<b class="nc"><i>21</i>&nbsp;        this.code = 200;</b>
+<b class="nc"><i>22</i>&nbsp;        this.message = msg;</b>
+<b class="nc"><i>23</i>&nbsp;    }</b>
+<i>24</i>&nbsp;
+<b class="nc"><i>25</i>&nbsp;    public BaseResult(int code, String message) {</b>
+<b class="nc"><i>26</i>&nbsp;        this.code = code;</b>
+<b class="nc"><i>27</i>&nbsp;        this.message = message;</b>
+<b class="nc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    public final void returnWithoutValue(Code code) {
+<b class="nc"><i>31</i>&nbsp;        this.code = code.getCode();</b>
+<b class="nc"><i>32</i>&nbsp;        this.message = code.getMessage();</b>
+<b class="nc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    public final void returnWithValue(Code code, T object) {
+<b class="nc"><i>36</i>&nbsp;        returnWithoutValue(code);</b>
+<b class="nc"><i>37</i>&nbsp;        this.data = object;</b>
+<b class="nc"><i>38</i>&nbsp;    }</b>
+<i>39</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-07-11 00:35</div>
+</div>
+</body>
+</html>

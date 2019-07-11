@@ -1,0 +1,142 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: UserService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.cunzheng.servie</a> ]
+</div>
+
+<h1>Coverage Summary for Class: UserService (com.cunzheng.servie)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/ 13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.cunzheng.servie;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.cunzheng.entity.UserBean;
+<i>4</i>&nbsp;import com.cunzheng.entity.UserRole;
+<i>5</i>&nbsp;import com.cunzheng.repository.UserRepository;
+<i>6</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>7</i>&nbsp;import org.springframework.stereotype.Service;
+<i>8</i>&nbsp;import org.springframework.util.DigestUtils;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.io.IOException;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;@Service
+<b class="fc"><i>13</i>&nbsp;public class UserService {</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Autowired
+<i>16</i>&nbsp;    private UserRepository userRepository;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * 验证用户名是否已经被使用
+<i>20</i>&nbsp;     *
+<i>21</i>&nbsp;     * @param userName
+<i>22</i>&nbsp;     * @return
+<i>23</i>&nbsp;     */
+<i>24</i>&nbsp;    public boolean hasUserNameCreated(String userName) {
+<b class="fc"><i>25</i>&nbsp;        return userRepository.findByUserName(userName) != null;</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * 验证用户名密码是否有效，有效返回用户对象
+<i>30</i>&nbsp;     *
+<i>31</i>&nbsp;     * @param userName
+<i>32</i>&nbsp;     * @param password
+<i>33</i>&nbsp;     * @return
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    public UserBean verifyUserNameAndPassWord(String userName, String password) {
+<b class="fc"><i>36</i>&nbsp;        String encodePassword = new String(DigestUtils.md5Digest(password.getBytes()));</b>
+<b class="fc"><i>37</i>&nbsp;        UserBean userBean = userRepository.findByUserName(userName);</b>
+<b class="fc"><i>38</i>&nbsp;        if (userBean == null) {</b>
+<b class="fc"><i>39</i>&nbsp;            return null;</b>
+<b class="fc"><i>40</i>&nbsp;        } else if (!userBean.getPassword().equals(encodePassword)) {</b>
+<b class="fc"><i>41</i>&nbsp;            return null;</b>
+<i>42</i>&nbsp;        }
+<b class="fc"><i>43</i>&nbsp;        return userBean;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * 密码加密保存用户对象
+<i>48</i>&nbsp;     *
+<i>49</i>&nbsp;     * @param userName
+<i>50</i>&nbsp;     * @param password
+<i>51</i>&nbsp;     * @param userRole
+<i>52</i>&nbsp;     * @param accountJson
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public void saveUser(String userName, String password, UserRole userRole, String accountJson) {
+<b class="fc"><i>55</i>&nbsp;        String encodePwd = new String(DigestUtils.md5Digest(password.getBytes()));</b>
+<b class="fc"><i>56</i>&nbsp;        UserBean userBean = new UserBean(userName, encodePwd, userRole, accountJson);</b>
+<b class="fc"><i>57</i>&nbsp;        userRepository.save(userBean);</b>
+<b class="fc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-07-11 00:35</div>
+</div>
+</body>
+</html>

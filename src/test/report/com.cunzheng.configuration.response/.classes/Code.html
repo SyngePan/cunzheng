@@ -1,0 +1,118 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Code</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.cunzheng.configuration.response</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Code (com.cunzheng.configuration.response)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Code</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.cunzheng.configuration.response;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import lombok.Getter;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Created by zhangrui on 2019/7/4.
+<i>7</i>&nbsp; * com.cunzheng.configuration.response
+<i>8</i>&nbsp; */
+<b class="nc"><i>9</i>&nbsp;@Getter</b>
+<i>10</i>&nbsp;public enum  Code {
+<i>11</i>&nbsp;    //通用部分
+<b class="nc"><i>12</i>&nbsp;    UNDEFINED(-1, &quot;未定义&quot;),</b>
+<b class="nc"><i>13</i>&nbsp;    SUCCESS(0, &quot;成功&quot;),</b>
+<i>14</i>&nbsp;
+<b class="nc"><i>15</i>&nbsp;    CONTRACT_ERROR(9001,&quot;合约调用错误&quot;),</b>
+<b class="nc"><i>16</i>&nbsp;    SYSTEM_ERROR(9999, &quot;系统异常，请稍后重试&quot;),</b>
+<i>17</i>&nbsp;
+<b class="nc"><i>18</i>&nbsp;    CONTRACT_ALREADY_EXISTED(200,&quot;合同已存在&quot;),</b>
+<b class="nc"><i>19</i>&nbsp;    CONTRACT_NOT_EXIST(300,&quot;合同不存在&quot;),</b>
+<i>20</i>&nbsp;	
+<b class="nc"><i>21</i>&nbsp;	CODE_FILE_NOT_EXITED(400,&quot;合同不存在&quot;),</b>
+<b class="nc"><i>22</i>&nbsp;	CODE_FILE_MODIFIED(500,&quot;合同被修改&quot;),</b>
+<b class="nc"><i>23</i>&nbsp;	CODE_FILE_STATUS_ERROR(600,&quot;合同状态错误&quot;),</b>
+<b class="nc"><i>24</i>&nbsp;	CODE_PERMISSION_DENY(700,&quot;权限错误&quot;);</b>
+<i>25</i>&nbsp;
+<b class="nc"><i>26</i>&nbsp;    private int code;</b>
+<b class="nc"><i>27</i>&nbsp;    private String message;</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    // 构造方法
+<b class="nc"><i>30</i>&nbsp;    Code(int code, String msg) {</b>
+<b class="nc"><i>31</i>&nbsp;        this.code = code;</b>
+<b class="nc"><i>32</i>&nbsp;        this.message = msg;</b>
+<b class="nc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-07-11 00:35</div>
+</div>
+</body>
+</html>

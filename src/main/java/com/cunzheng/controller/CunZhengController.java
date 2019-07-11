@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import com.cunzheng.Interceptor.UserEntitlement;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -51,6 +52,7 @@ public class CunZhengController {
 
 
     @PostMapping("/launchContract")
+    @UserEntitlement(value={UserRole.LANDLORD})
     @ApiOperation(value = "合同发起", notes = "合同发起")
     public BaseResult<ContractInvokeRet> saveEvidence(
             @ApiParam("用户名") @RequestParam String username,
@@ -70,6 +72,7 @@ public class CunZhengController {
         ContractInvokeRet ret = cunZhengContract.saveHash2(UserThreadLocal.get().getAccountJson(), password,
                 hash, currentTimeMillis, 1, 0);
 
+        ret.getReturnList().add(hash);
         handlerReturnStatus(baseResult, ret);
 
         if (baseResult.getCode() == 0) {
@@ -105,7 +108,7 @@ public class CunZhengController {
 
         ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                 hash);
-        baseResult.returnWithValue(Code.SUCCESS, ret);
+        handlerReturnStatus(baseResult, ret);
         return baseResult;
     }
 
@@ -122,7 +125,7 @@ public class CunZhengController {
 
         ContractInvokeRet ret = cunZhengContract.getFileByHash(UserThreadLocal.get().getAccountJson(), password,
                 fileHash);
-        baseResult.returnWithValue(Code.SUCCESS, ret);
+        handlerReturnStatus(baseResult, ret);
         return baseResult;
     }
 
@@ -179,6 +182,7 @@ public class CunZhengController {
     }
 
     @PostMapping("/landlordSign")
+    @UserEntitlement(value={UserRole.LANDLORD})
     @ApiOperation(value = "房东签约", notes = "房东签约")
     public BaseResult<ContractInvokeRet> landlordSign(@ApiParam("用户") @RequestParam String username,
                                                       @ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
@@ -202,12 +206,14 @@ public class CunZhengController {
         ContractInvokeRet ret = cunZhengContract.updateFile(accountJson, password, contractId, contractHash, hash,
                 currentTimeMillis, expectedStatus);
 
+        ret.getReturnList().add(hash);
         handlerReturnStatus(baseResult, ret);
         updateContractIntoDatabase(UserRole.LANDLORD, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
     }
 
     @PostMapping("/tenantSign")
+    @UserEntitlement(value={UserRole.TENANT})
     @ApiOperation(value = "租客签约", notes = "租客签约")
     public BaseResult<ContractInvokeRet> tenantSign(@ApiParam("用户") @RequestParam String username,
                                                     @ApiParam("密码") @RequestParam String password, @ApiParam("合同号") @RequestParam int contractId,
@@ -229,6 +235,7 @@ public class CunZhengController {
         ContractInvokeRet ret = cunZhengContract.updateFile(UserThreadLocal.get().getAccountJson(), password,
                 contractId, contractHash, hash, currentTimeMillis, expectedStatus);
 
+        ret.getReturnList().add(hash);
         handlerReturnStatus(baseResult, ret);
         updateContractIntoDatabase(UserRole.TENANT, contractId, multipartFile, baseResult, hash, currentTimeMillis);
         return baseResult;
@@ -267,7 +274,7 @@ public class CunZhengController {
                 baseResult.returnWithValue(Code.SUCCESS, ret);
                 break;
             case 2:
-                baseResult.returnWithValue(Code.CODE_PEMISSION_DENY, ret);
+                baseResult.returnWithValue(Code.CODE_PERMISSION_DENY, ret);
                 break;
             case 3:
                 baseResult.returnWithValue(Code.CONTRACT_ALREADY_EXISTED, ret);
